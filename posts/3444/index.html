@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="操作系统 简要介绍Win系统和Linux系统的常用命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统">
+<meta property="og:url" content="http://chuony.github.io/posts/3444/index.html">
+<meta property="og:site_name" content="Chuony&#39; Blog">
+<meta property="og:description" content="操作系统 简要介绍Win系统和Linux系统的常用命令">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-26T14:38:22.000Z">
+<meta property="article:modified_time" content="2021-01-26T15:33:04.999Z">
+<meta property="article:author" content="Chuony">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://chuony.github.io/posts/3444/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>操作系统 | Chuony' Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chuony' Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/3444/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/xi.jpg">
+      <meta itemprop="name" content="Chuony">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chuony' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-26 22:38:22 / Modified: 23:33:04" itemprop="dateCreated datePublished" datetime="2021-01-26T22:38:22+08:00">2021-01-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OS/" itemprop="url" rel="index"><span itemprop="name">OS</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><ul>
+<li>简要介绍Win系统和Linux系统的常用命令</li>
+</ul>
+<span id="more"></span>
+<h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><h5 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mstsc</span><br></pre></td></tr></table></figure>
+<h5 id="用户级别"><a href="#用户级别" class="headerlink" title="用户级别"></a>用户级别</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net user 用户名 密码（可选）/add</span><br><span class="line">net user 用户名 新密码</span><br><span class="line">net user 用户名 /<span class="keyword">del</span></span><br></pre></td></tr></table></figure>
+<h5 id="进程和端口"><a href="#进程和端口" class="headerlink" title="进程和端口"></a>进程和端口</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">tasklist <span class="comment">#查看所有系统进程</span></span><br><span class="line"></span><br><span class="line">netstat -ano <span class="comment">#查看端口进程，从中查找需要的端口号</span></span><br><span class="line">netstat -ano | findstr <span class="number">5353</span> <span class="comment">#查看指定端口连接信息，从中查找PID</span></span><br><span class="line">netstat -ano | findstr <span class="number">2452</span> <span class="comment">#也可以通过PID查找</span></span><br><span class="line">taskkill /f /pid <span class="number">6764</span> <span class="comment">#通过PID成功杀死6764端口的进程</span></span><br><span class="line">taskkill /f /im jupyter.exe  <span class="comment">#通过映像名称杀死</span></span><br><span class="line"></span><br><span class="line">tasklist | findstr jupyter  <span class="comment">#查找进程名包含“jupyter”的所有进程</span></span><br><span class="line">tasklist | findstr <span class="number">6764</span>    <span class="comment">#查找PID为6764的进程</span></span><br><span class="line"></span><br><span class="line">netstat:-port-PID   tasklist:-PID</span><br><span class="line">netstat/? #查看帮助</span><br></pre></td></tr></table></figure>
+<h5 id="查看服务与系统版本"><a href="#查看服务与系统版本" class="headerlink" title="查看服务与系统版本"></a>查看服务与系统版本</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net start  <span class="comment">#查看服务</span></span><br><span class="line">systeminfo  <span class="comment">#查看系统版本</span></span><br></pre></td></tr></table></figure>
+<h5 id="网络连接"><a href="#网络连接" class="headerlink" title="网络连接"></a>网络连接</h5><ul>
+<li><p>ping命令   TTL</p>
+</li>
+<li><p>tracert：跟踪从本机到目的地址所经过的路由</p>
+</li>
+<li><p>netstat:用来查看最近访问的网站 （如上）网络统计</p>
+</li>
+<li>ipconfig : 本机IP地址</li>
+</ul>
+<h4 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@competition-env~]<span class="comment">#</span></span><br><span class="line">root 当前用户的名字</span><br><span class="line"><span class="meta">@前面是用户名，后面是所在的域</span></span><br><span class="line">competition-env 当前电脑/主机的名字</span><br><span class="line">~ 家目录 当前所在目录的名字，会随着用户进入不同目录而改变</span><br><span class="line">具有权限的字符：$  <span class="comment">#</span></span><br><span class="line">$ 美元符号表示普通用户，有权限的限制</span><br><span class="line"><span class="comment"># 井号表示超级用户，也就是root。root拥有所有权限。</span></span><br></pre></td></tr></table></figure>
+<h5 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Tab 箭头</span><br><span class="line">/ 根目录</span><br><span class="line"></span><br><span class="line">uname -a  <span class="comment">#查看内核信息</span></span><br><span class="line">lsb_release -a  <span class="comment">#查看系统版本</span></span><br><span class="line">hostname  <span class="comment">#计算机名</span></span><br><span class="line">fdisk -l  <span class="comment">#查看磁盘分区</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>substitute  user</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo command  <span class="comment">#以root身份运行命令</span></span><br><span class="line">su    <span class="comment">#切换到root用户，但是没有转到root用户家目录下，即没有改变用户的环境</span></span><br><span class="line">su -  <span class="comment">#切换到root用户，并转到root家目录下</span></span><br><span class="line">su - 用户名  <span class="comment">#切换到普通用户</span></span><br><span class="line">sudo su <span class="comment">#乌班图系统，其他发行版本su即可</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>print working directory</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~$ pwd</span><br><span class="line">/home/用户名</span><br><span class="line">~<span class="comment"># pwd</span></span><br><span class="line">/root</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="目录相关"><a href="#目录相关" class="headerlink" title="目录相关"></a>目录相关</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pwd ls cd </span><br><span class="line">ls </span><br><span class="line">ls -a     ls --<span class="built_in">all</span>   <span class="comment">#显示包括隐藏的所有文件和目录</span></span><br><span class="line"></span><br><span class="line">ls -l  <span class="comment">#详细列表 常用 访问权限</span></span><br><span class="line">ll</span><br><span class="line">ls -l &gt;file</span><br><span class="line"></span><br><span class="line">ls /home</span><br><span class="line">cd = cd /home/用户名 <span class="comment">#直接回到家目录</span></span><br><span class="line">绝对路径 相对路径</span><br></pre></td></tr></table></figure>
+<h5 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h5><ul>
+<li>浏览文件（cat less head tail)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cat 文件名 :显示文件内容</span><br><span class="line">cat python.py</span><br><span class="line">cat -n <span class="comment">#-n可显示行号</span></span><br><span class="line">more  <span class="comment">#（老）与less差不多，但不能向后翻</span></span><br><span class="line">less  <span class="comment"># 比more功能强大，一页一页显示</span></span><br><span class="line"><span class="comment">#less常用快捷键</span></span><br><span class="line"><span class="comment">#空格键：下一个屏幕内容 与键盘的pagedown效果一样</span></span><br><span class="line"><span class="comment">#回车键：下一行 与向下键效果一样</span></span><br><span class="line"><span class="comment">#d键：前进半页</span></span><br><span class="line"><span class="comment">#b键：后退一页  pageup</span></span><br><span class="line"><span class="comment">#y键：后退一行 向上键</span></span><br><span class="line"><span class="comment">#u :后退半页</span></span><br><span class="line"><span class="comment">#q ：停止读取文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#= ：显示在什么位置 （会显示当前页面是文件中第几行到第几行，整个文件所含行数，所含字符数，整个文件所含字符）</span></span><br><span class="line"><span class="comment">#h :帮助文档</span></span><br><span class="line"><span class="comment">#/ :进入搜索模式，在/后输入搜索内容，按下回车则会把所有结果都标识。</span></span><br><span class="line"><span class="comment">#n ：跳到下一个符合内容</span></span><br><span class="line"><span class="comment">#N ：跳到上一个符合的搜索结果</span></span><br><span class="line"></span><br><span class="line">head tail :显示文件开头和结尾（头十行 尾十行）</span><br><span class="line">head -n <span class="number">5</span> syslog  <span class="comment">#显示头五行</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建文件和目录</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">touch mkdir :创建文件和目录</span><br><span class="line"></span><br><span class="line">touch new_file new_file1</span><br><span class="line">mkdir new_folder new_folder1</span><br><span class="line">mkdir -p one/two/three  <span class="comment">#递归创建目录结构</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>文件复制与移动</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cp 拷贝</span><br><span class="line">cp new_file new_file_copy  <span class="comment">#拷贝文件</span></span><br><span class="line">cp new_file one          <span class="comment">#拷贝文件到指定目录</span></span><br><span class="line">cp new_file one/new_file_copy  <span class="comment">#到目录重命名</span></span><br><span class="line">cp -r one one_copy     <span class="comment">#-r参数拷贝整个目录</span></span><br><span class="line">cp *.txt one        <span class="comment">#把当前目录所有txt文件拷贝到one子目录中</span></span><br><span class="line">cp py* one          <span class="comment">#当前目录下凡是以py开头的文件都拷贝到one子目录中</span></span><br><span class="line"></span><br><span class="line">mv 移动（不会创建副本）</span><br><span class="line"><span class="comment"># 移动目录不需要额外参数，其他操作与cp相同</span></span><br><span class="line"></span><br><span class="line">rm 删除</span><br><span class="line">rmdir 只能删除空的目录</span><br><span class="line">rm new_file</span><br><span class="line">rm -r one  <span class="comment">#删除目录加参数</span></span><br><span class="line">rm -rf  <span class="comment">#危险！-f强制删除</span></span><br></pre></td></tr></table></figure>
+<h5 id="用户和权限"><a href="#用户和权限" class="headerlink" title="用户和权限"></a>用户和权限</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ln  <span class="comment">#创建指向文件的链接（类似win的快捷方式）</span></span><br><span class="line"><span class="comment">#硬链接：使链接的两个文件共享同样的文件内容，也就是同样的inode</span></span><br><span class="line"><span class="comment">#ls -l  第二列表示硬链接 目录的硬链接是2 </span></span><br><span class="line"><span class="comment">#软链接：直接指向文件，不具有同样的inode（更像win的快捷方式）</span></span><br><span class="line">ln -s file1 file2  <span class="comment">#软链接需要加参数</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">d rwx rwx rwx</span><br><span class="line">d 属性 </span><br><span class="line">第一组rwx表示文件的所有者对于此文件的访问权限</span><br><span class="line">第二组：文件所属群组的其他用户</span><br><span class="line">第三组：除前两组之外的其他用户</span><br><span class="line">root享有所有权限</span><br><span class="line">d <span class="comment">#目录</span></span><br><span class="line">l <span class="comment">#链接</span></span><br><span class="line">r <span class="comment">#读</span></span><br><span class="line">w <span class="comment">#写</span></span><br><span class="line">x <span class="comment">#可执行文件</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>修改文件的所有者和群组（只有root用户可以修改）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chown 新用户名 文件名<span class="comment">#改变文件的所有者change owner</span></span><br><span class="line">chgrp 新群组 文件名 <span class="comment">#改变文件的群组change group</span></span><br><span class="line">chown 新用户名:新群组 文件名 <span class="comment">#同时改变用户和群组 </span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改访问权限(root 和文件所有者均可)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#用数字分配change mood</span></span><br><span class="line">r:<span class="number">4</span>  w:<span class="number">2</span>  x:<span class="number">1</span></span><br><span class="line">chmod <span class="number">600</span> 文件名   <span class="comment">#4+2 0 0  rw-------</span></span><br><span class="line"><span class="comment">#用字母来分配权限</span></span><br><span class="line">u: user <span class="comment">#表示所有者</span></span><br><span class="line">g: group <span class="comment">#群组用户</span></span><br><span class="line">o: other <span class="comment">#其他用户</span></span><br><span class="line">a: <span class="built_in">all</span> <span class="comment">#所有用户</span></span><br><span class="line">+ <span class="comment">#添加权限</span></span><br><span class="line">- <span class="comment">#去除权限</span></span><br><span class="line">= <span class="comment">#分配权限  （会重新分配，之前的权限会消失）</span></span><br><span class="line"></span><br><span class="line">chmod u+rx file.txt <span class="comment">#为所有者增加读和写的权限</span></span><br><span class="line">chmod go-r file.txt <span class="comment">#为群组和其他用户移除读的权限</span></span><br><span class="line">chmod +x file.txt  <span class="comment">#为所有用户增加运行的权限</span></span><br><span class="line">chmod u=rwx,g=r,o=- file.txt  <span class="comment"># -表示其他用户没有权限</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="进程与数据流"><a href="#进程与数据流" class="headerlink" title="进程与数据流"></a>进程与数据流</h5><ul>
+<li>数据处理</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep命令：筛选数据 与正则表达式一起 Globally search a Regular Expression <span class="keyword">and</span> Print</span><br><span class="line">grep alias .bashrc </span><br><span class="line"><span class="comment">#在用户的家目录的 .bashrc 文件中搜索 alias 这个文本，而且显示所有包含alias的行</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wc 命令：文件统计  word count</span><br><span class="line">wc name.text</span><br><span class="line"><span class="comment"># 返回：行数 单词数 字节数 文件名</span></span><br><span class="line">man wc</span><br></pre></td></tr></table></figure>
+<ul>
+<li>管道和重定向</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">流 管道 重定向</span><br><span class="line">&gt;&gt;符号可以追加内容 &gt;符号会把文件内容清空再写入 文件不存在则创建文件</span><br><span class="line">stdin  <span class="comment">#标准输入  文件描述符为0</span></span><br><span class="line">stdout  <span class="comment">#标准输出  文件描述符为1</span></span><br><span class="line">stderr  <span class="comment">#标准错误输出  文件描述符为2</span></span><br><span class="line">cat not_exit_file.csv &gt; results.txt  <span class="comment">#标准错误输出会显示到终端</span></span><br><span class="line">cat not_exist_file.csv &gt; results.txt <span class="number">2</span>&gt; errors.log</span><br><span class="line"><span class="comment"># 2&gt;&gt; 符号用于将标准错误输出重定向到文件末尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#合并输出  2&gt;&amp;1</span></span><br><span class="line">cat not_exist_file.csv &gt; results.txt <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"><span class="comment">#追加：改变前面的符号</span></span><br><span class="line">cat not_exist_file.csv &gt;&gt; results.txt <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"></span><br><span class="line">&lt; 从文件读取 （与不加结果一样，只是过程不一样）</span><br><span class="line">&lt;&lt; 从键盘读取</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">管道符号：|  前一个命令的输出是后一个命令的输入</span><br><span class="line">ls | sort | head</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看进程</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ps 命令 静态</span><br><span class="line">ps -ef :列出所有用户在所有终端的所有进程</span><br><span class="line">ps -u :当前用户</span><br><span class="line">ps -aux ：通过CPU和内存使用来过滤进程</span><br><span class="line">ps -aux | less</span><br><span class="line">ps -ef|grep python :Python正在运行的进程</span><br><span class="line"></span><br><span class="line">top 动态查看进程</span><br><span class="line"><span class="comment">#无法显示全部的进程,它只显示排在前面的一些进程</span></span><br><span class="line"><span class="comment">#默认这些进程是按照使用处理器的比率来排序的，从大到小（按照 %CPU 那一列的数值），最消耗处理器的进程排在最前面</span></span><br><span class="line"></span><br><span class="line">停止进程：Ctrl+C 和 kill</span><br><span class="line">kill PID1 PID2</span><br><span class="line">kill -<span class="number">9</span> PID <span class="comment">#强制结束进程</span></span><br><span class="line">killall python <span class="comment">#后接程序名不接进程名，杀死所有python程序</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>前后台进程</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&amp; ：在命令后面加，即在后台运行进程</span><br><span class="line">python python.py &amp;</span><br><span class="line">[<span class="number">1</span>] <span class="number">2051</span>  <span class="comment">#1表示此终端的后台进程标号  2051是PID</span></span><br><span class="line"></span><br><span class="line">nohup +命令:使进程与终端分离  通常nohup与&amp;一起(关掉shell ctrl+c 都不中断)</span><br><span class="line">nohup command <span class="number">1</span>&gt;output.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br><span class="line">nohup python main_log.py <span class="number">1</span>&gt;new.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br><span class="line">ps -ef|grep python.py   <span class="comment">#查看进程是否运行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#暂停进程：Ctrl+Z 则进程由前台转到后台，运行bg命令则进程重新运行，并继续在后台</span></span><br><span class="line"><span class="comment">#fg命令可以使进程转到前台并运行</span></span><br><span class="line">jobs <span class="comment">#显示后台进程状态</span></span><br></pre></td></tr></table></figure>
+<h5 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ifconfig :查看所有网络接口的属性</span><br><span class="line">netstat :网络统计</span><br><span class="line"></span><br><span class="line">？  iptables :防火墙  nftables命令代替了iptables</span><br><span class="line">iptables -L  查看防火墙设置</span><br><span class="line"></span><br><span class="line">talnet ip port :测试端口连通性</span><br></pre></td></tr></table></figure>
+<h5 id="文本编辑"><a href="#文本编辑" class="headerlink" title="文本编辑"></a>文本编辑</h5><ul>
+<li>vim是vi的升级版本，包含vi的所有命令。vi适合纯文本编辑，vim更适合coding。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vim*  <span class="comment">#自带vi 安装vim -y（当安装过程提示选择全部为&quot;yes&quot;），-h（帮助），-q（不显示安装的过程）</span></span><br><span class="line">vimtutor  <span class="comment">#vim教程</span></span><br><span class="line"></span><br><span class="line">vim</span><br><span class="line"><span class="comment">#三种工作模式</span></span><br><span class="line"><span class="comment">#交互模式：剪切，粘贴，撤销  插入模式：输入文本  命令模式：报存，退出，配置等 </span></span><br><span class="line">vim 文件名  <span class="comment">#文件不存在则创建</span></span><br><span class="line">i 插入文本</span><br><span class="line"><span class="number">0</span> 和 $  移动到行首和行末</span><br><span class="line">w 一个单词一个单词地移动</span><br><span class="line"><span class="comment"># 冒号键:是命令模式</span></span><br><span class="line">:w 保存文件  :w 文件名 <span class="comment">#以该文件名保存</span></span><br><span class="line">:q 退出</span><br><span class="line">:wq 保存退出  :x 效果一样</span><br><span class="line">:q! 强制退出不保存</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#交互模式</span></span><br><span class="line"></span><br><span class="line">x  <span class="comment">#删除字符 与插入模式下的退格键一样</span></span><br><span class="line">dd  <span class="comment">#删除行，其实是剪切 </span></span><br><span class="line">2dd <span class="comment">#除从光标所在行开始的2行</span></span><br><span class="line">dw  <span class="comment">#删除一个单词,将光标置于一个单词的首字母处  3dw一次性删除三个单词</span></span><br><span class="line">yy  <span class="comment">#复制行</span></span><br><span class="line">p   <span class="comment">#粘贴  7p粘贴七次 用p来粘贴时，内容会被粘贴到光标之后，如果用yy复制了一行，再用p来粘贴，那么这一行会被粘贴到光标所在行的下一行处</span></span><br><span class="line"></span><br><span class="line">u  <span class="comment">#撤销操作 使用频率高 4u撤销最近四次修改</span></span><br><span class="line"><span class="comment">#取消撤销，重做之前的修改  Ctrl+r (redo)</span></span><br><span class="line">g  <span class="comment">#跳转到指定行</span></span><br><span class="line"><span class="comment">#vim右下角有 1,4   1表示行号，4表示列号</span></span><br><span class="line">7G  <span class="comment">#跳转到第七行，g大写  7gg效果一样</span></span><br><span class="line"><span class="comment">#跳转到最后一行，按下G；跳转到第一行，按下gg；跳转到指定行：行号 + G或行号 + gg</span></span><br><span class="line"></span><br><span class="line">/ <span class="comment">#查找，后接要查找的字符串</span></span><br><span class="line"><span class="comment">#n键（next)表示下一处 ，N返回</span></span><br><span class="line">？ <span class="comment">#从当前光标处开始，向文件开头搜索，其他与/一样</span></span><br><span class="line">:r <span class="comment">#合并文件</span></span><br><span class="line"><span class="comment"># :r 另一个文件名  #在光标的下一行插入文件内容</span></span><br><span class="line">:! <span class="comment">#运行外部命令</span></span><br><span class="line">:!ls <span class="comment">#列出当前目录包含的文件</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者:  </strong>Chuony
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接: </strong>
+    <a href="http://chuony.github.io/posts/3444/" title="操作系统">http://chuony.github.io/posts/3444/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/OS/" rel="tag"><i class="fa fa-tag"></i>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/62197/" rel="prev" title="机器学习导论">
+      <i class="fa fa-chevron-left"></i> 机器学习导论
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/61054/" rel="next" title="【线性模型】西瓜书第3章">
+      【线性模型】西瓜书第3章 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-text">操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows"><span class="nav-text">Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95"><span class="nav-text">远程登录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E5%88%AB"><span class="nav-text">用户级别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%AB%AF%E5%8F%A3"><span class="nav-text">进程和端口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC"><span class="nav-text">查看服务与系统版本</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5"><span class="nav-text">网络连接</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux"><span class="nav-text">Linux</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="nav-text">基础命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%9B%B8%E5%85%B3"><span class="nav-text">目录相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="nav-text">文件操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%92%8C%E6%9D%83%E9%99%90"><span class="nav-text">用户和权限</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-text">进程与数据流</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-text">网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">文本编辑</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chuony"
+      src="/images/xi.jpg">
+  <p class="site-author-name" itemprop="name">Chuony</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chuony" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chuony" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:erali770@163.com" title="E-Mail → mailto:erali770@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chuony</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">59k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">54 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

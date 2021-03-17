@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本篇主要讲解西瓜书的第5章——神经网络。神经网络最基本的成分是神经元模型，类比于生物神经网络，当达到一定的阈值该神经元才会被激活。感知机是最原始的神经网络模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【NN】西瓜书第5章">
+<meta property="og:url" content="http://chuony.github.io/posts/22354/index.html">
+<meta property="og:site_name" content="Chuony&#39; Blog">
+<meta property="og:description" content="本篇主要讲解西瓜书的第5章——神经网络。神经网络最基本的成分是神经元模型，类比于生物神经网络，当达到一定的阈值该神经元才会被激活。感知机是最原始的神经网络模型。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210112.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210143.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205057.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205137.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205226.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205325.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205410.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227182150.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210805.png">
+<meta property="article:published_time" content="2021-02-21T11:20:36.000Z">
+<meta property="article:modified_time" content="2021-02-27T10:22:15.138Z">
+<meta property="article:author" content="Chuony">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210112.png">
+
+<link rel="canonical" href="http://chuony.github.io/posts/22354/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【NN】西瓜书第5章 | Chuony' Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chuony' Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/22354/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/xi.jpg">
+      <meta itemprop="name" content="Chuony">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chuony' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【NN】西瓜书第5章
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-02-21 19:20:36" itemprop="dateCreated datePublished" datetime="2021-02-21T19:20:36+08:00">2021-02-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-27 18:22:15" itemprop="dateModified" datetime="2021-02-27T18:22:15+08:00">2021-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本篇主要讲解西瓜书的第5章——神经网络。神经网络最基本的成分是神经元模型，类比于生物神经网络，当达到一定的阈值该神经元才会被激活。感知机是最原始的神经网络模型。</p>
+<span id="more"></span>
+<h3 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h3><p>感知机由两层神经元组成（输入层与输出层），是一个二分类的线性分类模型，属于判别模型。</p>
+<p>(公式取自李航老师的“统计学习方法”)</p>
+<ul>
+<li>感知机模型：</li>
+</ul>
+<script type="math/tex; mode=display">
+f(x)=sign(w\cdot x+b)</script><p>​    其中，sign 为阶跃函数：</p>
+<script type="math/tex; mode=display">
+sign(x)=\left\{
+\begin{aligned}
++1,x\geq 0 \\
+-1,x< 0
+\end{aligned}
+\right.</script><p>假设训练数据集是线性可分的，感知机的目标是求得一个能够将训练集正样本和负样本完全正确分开的超平面。为了找到这样的超平面，需要一个学习策略即损失函数。</p>
+<ul>
+<li>感知机准则：误分类点的总数。损失函数：</li>
+</ul>
+<script type="math/tex; mode=display">
+L(w,b)=-\sum_{x_i\in M}y_i(w\cdot x_i+b)</script><p>​    其中：M 为误分类点的集合。该损失函数就是感知机学习的经验风险函数。该损失函数是非负的，如果没有误分类点，损失函数值为0；误分类点越少，误分类点离超平面越近，损失函数值就越小。</p>
+<ul>
+<li>学习算法：利用梯度下降算法更新参数</li>
+</ul>
+<h3 id="与逻辑回归的区别"><a href="#与逻辑回归的区别" class="headerlink" title="与逻辑回归的区别"></a>与逻辑回归的区别</h3><p>感知机如果换成sigmoid函数其实和LR是一样的。（后续神经网络考虑多种激活函数，由于阶跃函数具有不连续、不光滑等不好的性质），但传统的感知机模型还是阶跃函数。</p>
+<ul>
+<li>感知机：只能输出0\1；</li>
+<li>LR：输出概率的模式—置信度（0和1之间），样本距离判别界面的远近情况。</li>
+<li>二者损失函数不同，感知机针对误分类点到超平面的距离总和进行建模，LR使用交叉熵损失建模。</li>
+<li>损失函数两者不同：逻辑斯蒂回归使用极大似然（对数损失函数），感知机使用的是均方损失函数（即错误点到分离平面的距离，最小化这个值）   ？？</li>
+<li>逻辑回归的损失函数由最大似然推导而来，力图使预测概率分布与真实概率分布接近。感知机的损失函数可能有多种方法，可能有多层感知机，但他们本质的思想都是使预测的结果与真实结果误差更小，是函数拟合，是去求得分类超平面。这是两者最最根本的差异。</li>
+</ul>
+<h3 id="多层感知机"><a href="#多层感知机" class="headerlink" title="多层感知机"></a>多层感知机</h3><p>单层感知机不能解决异或问题。要解决非线性问题，需考虑使用多层功能神经元。下图所示的两层感知机（包含隐层）就能解决异或问题，隐层和输出层包含功能神经元。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210112.png" alt="image-20210221210112706" style="zoom:67%;" /></p>
+<p>前馈神经网络：</p>
+<ul>
+<li>每层神经元与下一层神经元全互连；</li>
+<li><p>神经元之间不存在同层连接，也不存在跨层连接。</p>
+</li>
+<li><p>神经网路的学习过程，就是根据训练数据来调整神经元之间的“连接权重”以及每个功能神经元的“阈值”。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210143.png" alt="image-20210221210143266" style="zoom:67%;" /></p>
+<h3 id="BP算法"><a href="#BP算法" class="headerlink" title="BP算法"></a>BP算法</h3><p>多层感知机的训练使用误差反向传播算法（BP）</p>
+<ul>
+<li>BP算法就是通过比较实际输出和期望输出得到误差信号，把误差信号从输出层逐层向前传播得到各层的误差信号，再通过调整各层的连接权重以减小误差。权重的调整主要使用梯度下降法。</li>
+<li>BP算法：选择适当的激活函数。</li>
+</ul>
+<p>示例：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205057.png" alt="image-20210221205048204" style="zoom: 67%;" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205137.png" alt="image-20210221205137503" style="zoom:67%;" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205226.png" alt="image-20210221205226224" style="zoom:67%;" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205325.png" alt="image-20210221205325134" style="zoom:67%;" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221205410.png" alt="image-20210221205410250" style="zoom:67%;" /></p>
+<h3 id="全局最小与局部极小"><a href="#全局最小与局部极小" class="headerlink" title="全局最小与局部极小"></a>全局最小与局部极小</h3><p>在现实任务中，人们常采用一下策略来试图跳出局部极小，从而进一步接近全局最小：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227182150.png" alt="image-20210227182149989" style="zoom: 80%;" /></p>
+<h3 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h3><p>典型的深度学习就是很深层的神经网络。</p>
+<ul>
+<li>增加隐层的数目显然比增加隐层神经元的数目更有效，因为增加隐层不仅增加了拥有激活函数的神经元数目，还增加了激活函数嵌套的层数。</li>
+<li>但多隐层的神经网络难以直接用BP算法进行训练，因为误差在多隐层内逆传播时，往往会发散而不能收敛到稳定状态。</li>
+</ul>
+<p>预训练+微调：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210221210805.png" alt="image-20210221210805676" style="zoom: 80%;" /></p>
+<ul>
+<li>受限玻尔兹曼机（RBM）：双向？？来回约束到稳定状态，因此无监督？</li>
+</ul>
+<p>权共享：</p>
+<ul>
+<li>CNN：可用BP算法进行训练。训练中，无论是卷积层还是采样层，其每一组神经元都是用相同的连接权，从而大幅度减少了需要训练的参数数目。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者:  </strong>Chuony
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接: </strong>
+    <a href="http://chuony.github.io/posts/22354/" title="【NN】西瓜书第5章">http://chuony.github.io/posts/22354/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/8771/" rel="prev" title="【NB】西瓜书第7章">
+      <i class="fa fa-chevron-left"></i> 【NB】西瓜书第7章
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/12001/" rel="next" title="【模型评估】西瓜书第2章">
+      【模型评估】西瓜书第2章 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%84%9F%E7%9F%A5%E6%9C%BA"><span class="nav-text">感知机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">与逻辑回归的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA"><span class="nav-text">多层感知机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BP%E7%AE%97%E6%B3%95"><span class="nav-text">BP算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E6%9C%80%E5%B0%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E6%9E%81%E5%B0%8F"><span class="nav-text">全局最小与局部极小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0"><span class="nav-text">深度学习</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chuony"
+      src="/images/xi.jpg">
+  <p class="site-author-name" itemprop="name">Chuony</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chuony" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chuony" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:erali770@163.com" title="E-Mail → mailto:erali770@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chuony</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">59k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">54 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

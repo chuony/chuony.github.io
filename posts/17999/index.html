@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Kaggle泰坦尼克号【数据清洗与特征处理】Kaggle泰坦尼克号项目(二)带领大家进行了数据清洗以及数据的特征处理。本篇将介绍数据重构方面的内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【数据重构】Kaggle泰坦尼克号项目(三)">
+<meta property="og:url" content="http://chuony.github.io/posts/17999/index.html">
+<meta property="og:site_name" content="Chuony&#39; Blog">
+<meta property="og:description" content="Kaggle泰坦尼克号【数据清洗与特征处理】Kaggle泰坦尼克号项目(二)带领大家进行了数据清洗以及数据的特征处理。本篇将介绍数据重构方面的内容。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://chuony.github.io/posts/17999/stack.png">
+<meta property="article:published_time" content="2020-08-22T10:36:04.000Z">
+<meta property="article:modified_time" content="2020-09-15T08:42:34.087Z">
+<meta property="article:author" content="Chuony">
+<meta property="article:tag" content="Data Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://chuony.github.io/posts/17999/stack.png">
+
+<link rel="canonical" href="http://chuony.github.io/posts/17999/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【数据重构】Kaggle泰坦尼克号项目(三) | Chuony' Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chuony' Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/17999/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/xi.jpg">
+      <meta itemprop="name" content="Chuony">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chuony' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【数据重构】Kaggle泰坦尼克号项目(三)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-22 18:36:04" itemprop="dateCreated datePublished" datetime="2020-08-22T18:36:04+08:00">2020-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-15 16:42:34" itemprop="dateModified" datetime="2020-09-15T16:42:34+08:00">2020-09-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Analysis/" itemprop="url" rel="index"><span itemprop="name">Data Analysis</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>8.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>7 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Kaggle泰坦尼克号"><a href="#Kaggle泰坦尼克号" class="headerlink" title="Kaggle泰坦尼克号"></a>Kaggle泰坦尼克号</h3><p><a href="https://chuony.github.io/posts/37105/">【数据清洗与特征处理】Kaggle泰坦尼克号项目(二)</a>带领大家进行了数据清洗以及数据的特征处理。本篇将介绍数据重构方面的内容。</p>
+<span id="more"></span>
+<h3 id="数据重构"><a href="#数据重构" class="headerlink" title="数据重构"></a>数据重构</h3><p>数据重构：数据从一种格式到另一种格式的转换，包括结构、格式和类型的转换等（数据拼接、数据裁剪、数据压缩等）</p>
+<h4 id="数据合并"><a href="#数据合并" class="headerlink" title="数据合并"></a>数据合并</h4><p>数据合并有四种方法：<strong>concat、merge、join、append</strong></p>
+<p>现拥有四份数据：train-left-up.csv、train-left-down.csv、train-right-up.csv、train-right-down.csv，这四份数据分别来源于最一开始的train.csv，根据命名可以很明显的知道他们之间的关系，通过这四份数据来对比这四种合并方法的区别。</p>
+<p><strong>concat是pandas的方法，可以沿着某一条轴将多个对象堆叠在一起</strong></p>
+<p><strong>任务</strong>：使用concat方法，将数据train-left-up.csv和train-right-up.csv横向合并为一张表，并保存这张表为result_up</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">list_up = [train_left_up,train_right_up]</span><br><span class="line">result_up = pd.concat(list_up,axis=<span class="number">1</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">	pd.concat(objs, axis=0, join=&#x27;outer&#x27;, join_axes=None, ignore_index=False,\</span></span><br><span class="line"><span class="string">       keys=None, levels=None, names=None, verify_integrity=False)</span></span><br><span class="line"><span class="string">Args:	</span></span><br><span class="line"><span class="string">	objs: series、dataframe、list</span></span><br><span class="line"><span class="string">	axis: &#123;0/&#x27;index&#x27;, 1/&#x27;columns&#x27;&#125;, default 0</span></span><br><span class="line"><span class="string">	join: &#123;&#x27;inner&#x27;, &#x27;outer&#x27;&#125;, default &#x27;outer&#x27;. inner:交集；outer:并集</span></span><br><span class="line"><span class="string">	ignore_index: bool,default False  若为True则重新整理index</span></span><br><span class="line"><span class="string">	keys: sequence, default None  通过keys参数增加数据的键</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pd.concat([df1,df2,df3],keys=[<span class="string">&#x27;df1&#x27;</span>,<span class="string">&#x27;df2&#x27;</span>,<span class="string">&#x27;df3&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<p><strong>任务</strong>：使用concat方法，将train-left-down和train-right-down横向合并为一张表，并保存这张表为result_down。然后将上边的result_up和result_down纵向合并为result。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">list_down=[train_left_down,train_right_down]</span><br><span class="line">result_down = pd.concat(list_down,axis=<span class="number">1</span>)</span><br><span class="line">result = pd.concat([result_up,result_down])</span><br><span class="line">result.head()</span><br></pre></td></tr></table></figure>
+<p><strong>merge</strong>是pandas的方法，<strong>append</strong>是DataFrame的方法。merge通过键拼接列，append只是实现简单的合并。</p>
+<p><strong>任务</strong>：使用Panads的merge方法和DataFrame的append方法，完成上述两个任务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">result_up = pd.merge(train_left_up,train_right_up,\</span><br><span class="line">                    left_index=<span class="literal">True</span>,right_index=<span class="literal">True</span>)</span><br><span class="line">result_down = pd.merge(train_left_down,train_right_down,\</span><br><span class="line">                       left_index=<span class="literal">True</span>,right_index=<span class="literal">True</span>)</span><br><span class="line">result = resul_up.append(result_down)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">	pd.merge(left, right, how=‘inner’, on=None, left_on=None, right_on=None,\</span></span><br><span class="line"><span class="string">	left_index=False, right_index=False, sort=True,suffixes=(’_x’, ‘_y’),\</span></span><br><span class="line"><span class="string">	copy=True, indicator=False)</span></span><br><span class="line"><span class="string">Args:</span></span><br><span class="line"><span class="string">    on=None 用于显示指定列名（键名），如果该列在两个对象上的列名不同，则可以通过</span></span><br><span class="line"><span class="string">    left_on=None, right_on=None 来分别指定。或者想直接使用行索引作为连接键的话，就将</span></span><br><span class="line"><span class="string">    left_index=False, right_index=False 设为 True。</span></span><br><span class="line"><span class="string">    how: &#123;‘left’, ‘right’, ‘outer’, ‘inner’&#125; 注意与concat的不同</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 没有指定连接键，默认用重叠列名，没有指定连接方式</span></span><br><span class="line">pd.merge(df1,df2) </span><br><span class="line"><span class="comment"># 多键连接时将连接键组成列表传入</span></span><br><span class="line">pd.merge(df1,df2,on=[<span class="string">&#x27;key1&#x27;</span>,<span class="string">&#x27;key2&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<p><strong>join</strong>是DataFrame的方法，用来拼接列</p>
+<p><strong>任务</strong>：使用DataFrame自带的方法join方法和append，完成上述两个任务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">resul_up = train_left_up.join(train_right_up)</span><br><span class="line">result_down = train_left_down.join(train_right_down)</span><br><span class="line">result = result_up.append(result_down)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">	df.join(self, other, on=None, how=&#x27;left&#x27;, lsuffix=&#x27;&#x27;,rsuffix=&#x27;&#x27;,sort=False)</span></span><br><span class="line"><span class="string">Args:</span></span><br><span class="line"><span class="string">	参数的意义与merge方法基本相同;</span></span><br><span class="line"><span class="string">	默认按索引合并;</span></span><br><span class="line"><span class="string">	join方法默认为左外连接how=left（注意各方法的how)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><strong>保存</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result.to_csv(<span class="string">&#x27;result.csv&#x27;</span>,index=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>总结</strong></p>
+<ol>
+<li>merge通过一个或多个键拼接；join主要用于索引上的合并。merge中参数left_index=true,right_index=True时，是以索引当做连接键，与join相同，这种情况下最好使用join。</li>
+<li>merge函数的典型应用场景是：针对同一个主键存在两张包含不同字段的表，现在我们想把他们整合到一张表里。在此典型情况下，结果集的行数并没有增加，列数则为两个元数据的列数和减去连接键的数量。</li>
+<li>concat相当于数据库中的全连接(UNION ALL),可以指定按某个轴进行连接,也可以指定连接的方式join(outer,inner 只有这两种)。与数据库不同的时concat不会去重。</li>
+<li>append更体现在两个完全平行独立的表格的合并。</li>
+<li>concat默认竖向拼接（简单）；merge与join默认横向拼接（更多功能）。</li>
+<li>menge与join更像是内部表中以axis=1上的操作；而concat用法具有merge与append的特点。</li>
+</ol>
+<p>Ps: 上述总结摘自以下两位作者的博客</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zutsoft/article/details/51498026">https://blog.csdn.net/zutsoft/article/details/51498026</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43745169/article/details/103595710">https://blog.csdn.net/weixin_43745169/article/details/103595710</a></p>
+<p>更多对比操作见：<a target="_blank" rel="noopener" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/merging.html">Merge, join, concatenate and compare</a></p>
+<h4 id="数据转换类型"><a href="#数据转换类型" class="headerlink" title="数据转换类型"></a>数据转换类型</h4><p>stack: 堆叠。DataFrame有列索引和行索引（表格形式），Series只有列方向的索引（花括号形式）。通过stack可将表格数据转换为层次化的Series，将其列索引也变成行索引。</p>
+<p><strong>任务</strong>：将我们的数据变为Series类型的数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将完整的数据加载出来</span></span><br><span class="line">text = pd.read_csv(<span class="string">&#x27;result.csv&#x27;</span>)</span><br><span class="line">text.head()</span><br><span class="line"><span class="comment"># 数据类型转换</span></span><br><span class="line">unit_result = text.stack()</span><br><span class="line">unit_result.head()</span><br></pre></td></tr></table></figure>
+<p><img src="stack.png" alt="stack"></p>
+<p>unstack方法又可将其转换回去</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">text1 = text.unstack()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存stack后的数据，再次用pandas读取可发现都变成了行索引</span></span><br><span class="line">unit_result.to_csv(<span class="string">&#x27;unit_result.csv&#x27;</span>,index=<span class="literal">None</span>)</span><br><span class="line">test = pd.read_csv(<span class="string">&#x27;unit_result.csv&#x27;</span>,index=<span class="literal">None</span>)</span><br><span class="line">test.head()</span><br></pre></td></tr></table></figure>
+<h4 id="数据聚合与运算"><a href="#数据聚合与运算" class="headerlink" title="数据聚合与运算"></a>数据聚合与运算</h4><p><strong>GroupBy</strong>机制：pandas的groupby机制会将数据通过提供的一个键或多个键被拆分成多组，拆分操作可在数据的特定轴上进行，这种过程表示为：拆分—应用—合并。例：groupby将数据在行或列上进行分组，然后将一个函数应用到各个分组并产生一个新值，最后这些函数的执行结果会被合并到最终的结果对象中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DataFrame.groupby(by=<span class="literal">None</span>, axis=<span class="number">0</span>, level=<span class="literal">None</span>, as_index=<span class="literal">True</span>, sort=<span class="literal">True</span>,\</span><br><span class="line">                  group_keys=<span class="literal">True</span>, squeeze=&lt;<span class="built_in">object</span> <span class="built_in">object</span>&gt;, observed=<span class="literal">False</span>,\</span><br><span class="line">                  dropna=<span class="literal">True</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">	by: mapping, function, label, or list of labels</span></span><br><span class="line"><span class="string">	axis: &#123;0 or ‘index’, 1 or ‘columns’&#125;, default 0</span></span><br><span class="line"><span class="string">	level: int, level name, or sequence of such, default None.若是多层次索引，</span></span><br><span class="line"><span class="string">	将按照指定层次或多个层次分组</span></span><br><span class="line"><span class="string">	dropna: bool, default True.为True时若组键包含NA值，则NA值以及行/列将会被删除；</span></span><br><span class="line"><span class="string">	若为False,则NA值也将被视为组中的键。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>以<a target="_blank" rel="noopener" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html">官方文档示例</a>为例，将数据拆分成组：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">l = [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="literal">None</span>, <span class="number">4</span>], [<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>]]</span><br><span class="line">df = pd.DataFrame(l, columns=[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以键&#x27;b&#x27;将数据拆分成组，返回的是groupby对象</span></span><br><span class="line">df.groupby(df[<span class="string">&#x27;b&#x27;</span>])</span><br><span class="line"><span class="comment"># df.groupby(by=[&#x27;b&#x27;])</span></span><br><span class="line"><span class="comment"># df.groupby(by=&#x27;b&#x27;)</span></span><br><span class="line"><span class="comment"># df.groupby(&#x27;b&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分组 (b为NAN时会被删除)</span></span><br><span class="line">df.groupby(df[<span class="string">&#x27;b&#x27;</span>]).groups</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;<span class="number">1.0</span>: Int64Index([<span class="number">2</span>], dtype=<span class="string">&#x27;int64&#x27;</span>), <span class="number">2.0</span>: Int64Index(\</span><br><span class="line">     [<span class="number">0</span>,<span class="number">3</span>], dtype=<span class="string">&#x27;int64&#x27;</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多列分组</span></span><br><span class="line">df.groupby([<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>]).groups</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;(<span class="number">1</span>, <span class="number">2.0</span>): Int64Index([<span class="number">0</span>, <span class="number">3</span>], dtype=<span class="string">&#x27;int64&#x27;</span>),</span><br><span class="line">    (<span class="number">1</span>, nan): Int64Index([<span class="number">1</span>], dtype=<span class="string">&#x27;int64&#x27;</span>),</span><br><span class="line">    (<span class="number">2</span>, <span class="number">1.0</span>): Int64Index([<span class="number">2</span>], dtype=<span class="string">&#x27;int64&#x27;</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 迭代遍历分组</span></span><br><span class="line">grouped = df.groupby(<span class="string">&#x27;b&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> name ,group <span class="keyword">in</span> grouped:</span><br><span class="line">    print(name)</span><br><span class="line">    print(group)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">    <span class="number">1.0</span></span><br><span class="line">       a    b  c</span><br><span class="line">    <span class="number">2</span>  <span class="number">2</span>  <span class="number">1.0</span>  <span class="number">3</span></span><br><span class="line">    <span class="number">2.0</span></span><br><span class="line">       a    b  c</span><br><span class="line">    <span class="number">0</span>  <span class="number">1</span>  <span class="number">2.0</span>  <span class="number">3</span></span><br><span class="line">    <span class="number">3</span>  <span class="number">1</span>  <span class="number">2.0</span>  <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 选择一个分组</span></span><br><span class="line">grouped.get_group(<span class="number">1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a    b  c</span><br><span class="line"> <span class="number">2</span>  <span class="number">2</span>  <span class="number">1.0</span>  <span class="number">3</span> </span><br></pre></td></tr></table></figure>
+<p>更多操作详见：<a target="_blank" rel="noopener" href="https://www.yiibai.com/pandas/python_pandas_groupby.html">https://www.yiibai.com/pandas/python_pandas_groupby.html</a></p>
+<p><strong>任务一</strong>：计算泰坦尼克号男性与女性的平均票价</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">df  = text[<span class="string">&#x27;Fare&#x27;</span>].groupby(text[<span class="string">&#x27;Sex&#x27;</span>])</span><br><span class="line">means = df.mean()</span><br><span class="line"><span class="comment"># 也可通过agg函数达到一样的效果（任务四具体例子）</span></span><br><span class="line"><span class="comment"># means = df.agg(&#x27;mean&#x27;)</span></span><br><span class="line"><span class="comment"># means = df.agg(np.mean)</span></span><br><span class="line">means</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    df  = text.groupby(text[&#x27;Sex&#x27;])</span></span><br><span class="line"><span class="string">    means = df[&#x27;Fare&#x27;].mean()</span></span><br><span class="line"><span class="string">    means</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">	因此有两种写法：</span></span><br><span class="line"><span class="string">	text[&#x27;Fare&#x27;].groupby(text[&#x27;Sex&#x27;]).mean()</span></span><br><span class="line"><span class="string">	text.groupby(&#x27;Sex&#x27;)[&#x27;Fare&#x27;].mean()           # 推荐此种写法。可对多列进行操作</span></span><br><span class="line"><span class="string">	text.groupby([&#x27;Sex&#x27;,&#x27;Age&#x27;])[&#x27;Fare&#x27;].mean()   # 任务五具体例子</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 分组后又按所设置的键进行聚合操作 （第二列结果为票价平均值）</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">    Sex</span><br><span class="line">    female    <span class="number">44.479818</span></span><br><span class="line">    male      <span class="number">25.523893</span></span><br><span class="line">    Name: Fare, dtype: float64</span><br></pre></td></tr></table></figure>
+<p><strong>任务二</strong>：统计泰坦尼克号中男女的存活人数</p>
+<p>Ps：存活列中可发现如果活着为1，死亡为0，因此求和相加后为存活人数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">survived_sex = text[<span class="string">&#x27;Survived&#x27;</span>].groupby(text[<span class="string">&#x27;Sex&#x27;</span>]).<span class="built_in">sum</span>()</span><br><span class="line">survived_sex</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">    Sex</span><br><span class="line">    female    <span class="number">233</span></span><br><span class="line">    male      <span class="number">109</span></span><br><span class="line">    Name: Survived, dtype: int64</span><br></pre></td></tr></table></figure>
+<p><strong>任务三</strong>：计算客舱不同等级的存活人数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">survived_pclass = text[<span class="string">&#x27;Survived&#x27;</span>].groupby(text[<span class="string">&#x27;Pclass&#x27;</span>])</span><br><span class="line">survived_pclass.<span class="built_in">sum</span>()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">    Pclass</span><br><span class="line">    <span class="number">1</span>    <span class="number">136</span></span><br><span class="line">    <span class="number">2</span>     <span class="number">87</span></span><br><span class="line">    <span class="number">3</span>    <span class="number">119</span></span><br><span class="line">    Name: Survived, dtype: int64</span><br></pre></td></tr></table></figure>
+<p><strong>agg聚合函数</strong>：上述操作都可用agg()函数来运算，并且可以通过rename函数修改列名。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">df.agg(func=<span class="literal">None</span>, axis=<span class="number">0</span>, *args, **kwargs)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Args:</span></span><br><span class="line"><span class="string">	func:function, str, list or dict</span></span><br><span class="line"><span class="string">	用于汇总数据的功能。可接受的组合：</span></span><br><span class="line"><span class="string">	1.功能；</span></span><br><span class="line"><span class="string">	2.字符串函数名称；</span></span><br><span class="line"><span class="string">	3.功能或功能名称列表，例如[np.sum,&#x27;mean&#x27;];</span></span><br><span class="line"><span class="string">	4.轴标签的字典-&gt;函数，函数名称或此类列表</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	axis:&#123;0 or ‘index’, 1 or ‘columns’&#125;, default 0</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><strong>任务四</strong>：计算存活与死亡的最大年龄</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对&#x27;Age&#x27;列进行取最大值的操作（字典的键值为列名），并修改列名。（返回的是DataFrame)</span></span><br><span class="line">text.groupby(<span class="string">&#x27;Survived&#x27;</span>).agg(&#123;<span class="string">&#x27;Age&#x27;</span>: <span class="string">&#x27;max&#x27;</span>&#125;).rename(columns=&#123;<span class="string">&#x27;Age&#x27;</span>: <span class="string">&#x27;max_age&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下述四种方式返回结果均一致，返回的是Series</span></span><br><span class="line">text[<span class="string">&#x27;Age&#x27;</span>].groupby(text[<span class="string">&#x27;Survived&#x27;</span>]).agg(<span class="string">&#x27;max&#x27;</span>)</span><br><span class="line">text.groupby(<span class="string">&#x27;Survived&#x27;</span>)[<span class="string">&#x27;Age&#x27;</span>].agg(<span class="string">&#x27;max&#x27;</span>)</span><br><span class="line"></span><br><span class="line">text[<span class="string">&#x27;Age&#x27;</span>].groupby(text[<span class="string">&#x27;Survived&#x27;</span>]).<span class="built_in">max</span>()</span><br><span class="line">text.groupby(<span class="string">&#x27;Survived&#x27;</span>)[<span class="string">&#x27;Age&#x27;</span>].<span class="built_in">max</span>()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多个函数直接应用。返回的是DataFrame</span></span><br><span class="line">text[<span class="string">&#x27;Age&#x27;</span>].groupby(text[<span class="string">&#x27;Survived&#x27;</span>]).agg([<span class="string">&#x27;min&#x27;</span>,<span class="string">&#x27;max&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<p><strong>任务五</strong>：统计在不同等级的票中的不同年龄的船票花费的平均值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">text.groupby([<span class="string">&#x27;Pclass&#x27;</span>,<span class="string">&#x27;Age&#x27;</span>])[<span class="string">&#x27;Fare&#x27;</span>].mean()</span><br></pre></td></tr></table></figure>
+<p><strong>任务六</strong>：将任务一和任务二的数据合并，并保存</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回结果为DataFrame</span></span><br><span class="line">result = pd.merge(means,survived_sex,on=<span class="string">&#x27;Sex&#x27;</span>)</span><br><span class="line">result</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>             Fare    Survived</span><br><span class="line">	sex     <span class="number">44.479818</span>         <span class="number">233</span></span><br><span class="line">    female  <span class="number">25.523893</span>         <span class="number">109</span></span><br><span class="line"><span class="comment"># 保存</span></span><br><span class="line">result.to_csv(<span class="string">&#x27;sex_fare_survived.csv&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>任务七</strong>：得出不同年龄的总的存活人数，然后找出存活人数最高的年龄，最后计算存活人数最高的存活率（存活人数/总人数）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不同年龄的存活人数</span></span><br><span class="line">survived_age = text[<span class="string">&#x27;Survived&#x27;</span>].groupby(text[<span class="string">&#x27;Age&#x27;</span>]).<span class="built_in">sum</span>()</span><br><span class="line">survived_age.head()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找出最大值的年龄段</span></span><br><span class="line">survived_age[survived_age.values==survived_age.<span class="built_in">max</span>()]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">    Age</span><br><span class="line">    <span class="number">24.0</span>    <span class="number">15</span></span><br><span class="line">    Name: Survived, dtype: int64</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算总人数</span></span><br><span class="line">_sum = text[<span class="string">&#x27;Survived&#x27;</span>].<span class="built_in">sum</span>()</span><br><span class="line">print(<span class="string">&quot;sum of person:&quot;</span>+<span class="built_in">str</span>(_sum))</span><br><span class="line"><span class="comment"># 计算存活率</span></span><br><span class="line">precetn =survived_age.<span class="built_in">max</span>()/_sum</span><br><span class="line">print(<span class="string">&quot;最大存活率：&quot;</span>+<span class="built_in">str</span>(precetn))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">	<span class="built_in">sum</span> of person:<span class="number">342</span></span><br><span class="line">	最大存活率：<span class="number">0.043859649122807015</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者:  </strong>Chuony
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接: </strong>
+    <a href="http://chuony.github.io/posts/17999/" title="【数据重构】Kaggle泰坦尼克号项目(三)">http://chuony.github.io/posts/17999/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Analysis/" rel="tag"><i class="fa fa-tag"></i>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/37105/" rel="prev" title="【数据清洗与特征处理】Kaggle泰坦尼克号项目(二)">
+      <i class="fa fa-chevron-left"></i> 【数据清洗与特征处理】Kaggle泰坦尼克号项目(二)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/37489/" rel="next" title="【数据可视化】Kaggle泰坦尼克号项目(四)">
+      【数据可视化】Kaggle泰坦尼克号项目(四) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kaggle%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%8F%B7"><span class="nav-text">Kaggle泰坦尼克号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%87%8D%E6%9E%84"><span class="nav-text">数据重构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%90%88%E5%B9%B6"><span class="nav-text">数据合并</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E7%B1%BB%E5%9E%8B"><span class="nav-text">数据转换类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%81%9A%E5%90%88%E4%B8%8E%E8%BF%90%E7%AE%97"><span class="nav-text">数据聚合与运算</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chuony"
+      src="/images/xi.jpg">
+  <p class="site-author-name" itemprop="name">Chuony</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chuony" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chuony" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:erali770@163.com" title="E-Mail → mailto:erali770@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chuony</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">59k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">54 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

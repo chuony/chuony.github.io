@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1 引言 吴恩达大佬讲的机器学习入门视频通俗易懂。将前几讲的内容进行一下梳理，作为机器学习的导论，为接下来西瓜书内容做铺垫。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习导论">
+<meta property="og:url" content="http://chuony.github.io/posts/62197/index.html">
+<meta property="og:site_name" content="Chuony&#39; Blog">
+<meta property="og:description" content="1 引言 吴恩达大佬讲的机器学习入门视频通俗易懂。将前几讲的内容进行一下梳理，作为机器学习的导论，为接下来西瓜书内容做铺垫。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_1.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_3.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML_4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_9.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_10.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_11.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_12.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_13.png">
+<meta property="article:published_time" content="2021-01-25T08:52:35.000Z">
+<meta property="article:modified_time" content="2021-01-26T11:18:31.146Z">
+<meta property="article:author" content="Chuony">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_1.png">
+
+<link rel="canonical" href="http://chuony.github.io/posts/62197/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>机器学习导论 | Chuony' Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chuony' Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/62197/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/xi.jpg">
+      <meta itemprop="name" content="Chuony">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chuony' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习导论
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-25 16:52:35" itemprop="dateCreated datePublished" datetime="2021-01-25T16:52:35+08:00">2021-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-26 19:18:31" itemprop="dateModified" datetime="2021-01-26T19:18:31+08:00">2021-01-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h3><ul>
+<li><p>吴恩达大佬讲的机器学习入门视频通俗易懂。将前几讲的内容进行一下梳理，作为机器学习的导论，为接下来西瓜书内容做铺垫。</p>
+<span id="more"></span>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_1.png" alt="image-20210125173137636" style="zoom:80%;" /></p>
+</li>
+</ul>
+<h3 id="2-单变量线性回归"><a href="#2-单变量线性回归" class="headerlink" title="2 单变量线性回归"></a>2 单变量线性回归</h3><h4 id="2-1-模型表示"><a href="#2-1-模型表示" class="headerlink" title="2.1 模型表示"></a>2.1 模型表示</h4><ul>
+<li>例：房价预测（面积—价格）—— <strong>回归问题</strong></li>
+<li>监督学习算法工作方式：将训练集喂给所设计的学习算法，学习算法工作后输出一个函数 $h$ 。 $h$ 表示<strong>hypothesis</strong>(假设)，表示一个从输入到输出的映射函数，代表学习算法的解决方案。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_2.png" alt="image-20210125173750463" style="zoom:80%;" /></p>
+<ul>
+<li>如何表达 $h$ :一种可能的方式为线性回归</li>
+<li>单变量线性回归：只含有一个特征/输入变量。$h_\Theta(x)=\Theta_0+\Theta_1x$</li>
+</ul>
+<h4 id="2-2-代价函数"><a href="#2-2-代价函数" class="headerlink" title="2.2 代价函数"></a>2.2 代价函数</h4><ul>
+<li><p>线性函数形式：$h_\Theta(x)=\Theta_0+\Theta_1x$</p>
+</li>
+<li><p>如何为模型选择合适的参数 $\Theta_0,\Theta_1$: 代价函数（损失函数）</p>
+</li>
+<li><p>最小二乘法，误差平方和能够最小的模型参数：目标函数</p>
+<p>（误差平方和是回归问题的常用手段）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_3.png" alt="image-20210125180115353" style="zoom:80%;" /></p>
+</li>
+</ul>
+<h4 id="2-3-举例直观理解"><a href="#2-3-举例直观理解" class="headerlink" title="2.3 举例直观理解"></a>2.3 举例直观理解</h4><ul>
+<li><p>假设：$h_\Theta(x)=\Theta_1x$，当 $\Theta_1=0$ 时，$J(\Theta_1)$计算结果为：</p>
+<script type="math/tex; mode=display">
+J(0)=\frac{1}{2*3}(1^2+2^2+3^2)
+    =\frac{1}{6}*14
+    =2.3</script><p>当 $\Theta_1=1$ 时，$J(\Theta_1)$计算结果为 0</p>
+</li>
+<li><p>假设函数与代价函数的图像表示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML_4.png" alt="image-20210125181122579" style="zoom:80%;" /></p>
+</li>
+<li><p>等高线理解：三维空间中存在使得代价函数最小的点</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_5.png" alt="image-20210125181325122" style="zoom:80%;" /></p>
+</li>
+</ul>
+<h4 id="2-4-求函数最小值的算法"><a href="#2-4-求函数最小值的算法" class="headerlink" title="2.4 求函数最小值的算法"></a>2.4 求函数最小值的算法</h4><ul>
+<li>需要一种有效的算法，自动地找出使代价函数取最小值的参数：梯度下降法（GD）和矩阵法。</li>
+<li>梯度下降法计算步骤：1.代价函数：关于 $\Theta$ 的函数；2.开始时先随机选择一个参数的组合 $(\Theta_0,\Theta_1,….\Theta_n)$ ，带入代价函数求值；3.寻找下一个能让代价函数下降最多的参数组合（沿着梯度方向，设置学习率：沿着梯度方向迈出的步子有多大）。</li>
+<li>最终会找到局部最小值（不一定是全局，凸优化问题的局部最小值是全局最小值）。选择不同的初始参数组合，可能会找到不同的局部最小值。</li>
+<li>梯度下降算法：<strong>同时更新 $\Theta_0,\Theta_1$</strong> </li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_6.png" alt="image-20210125183057873"  /></p>
+<ul>
+<li><p>批量梯度下降法（BGD）：每次迭代都需要计算所有样本的残差并加和；</p>
+<p>随机梯度下降法（SGD）：每次选取一个样本进行梯度计算更新权重。</p>
+<p>对比：SGD比BGD收敛快，但可能找不到最优点而在最优点附近徘徊。</p>
+</li>
+<li><p>矩阵法：线性代数知识。梯度下降需要多次迭代，而矩阵法不需要多次迭代，一次计算即可得出结果，但当数据量过大时，即输入的矩阵过大，即求逆的计算复杂度很大，因此矩阵法适用于小规模数据。另外矩阵法不需要对输入特征数据中心化。</p>
+</li>
+</ul>
+<h4 id="2-5-梯度下降的线性回归"><a href="#2-5-梯度下降的线性回归" class="headerlink" title="2.5 梯度下降的线性回归"></a>2.5 梯度下降的线性回归</h4><ul>
+<li><p>梯度下降算法和线性回归算法：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_7.png" alt="image-20210126134445623" style="zoom:80%;" /></p>
+</li>
+<li><p>对之前的线性回归问题运用梯度下降法：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_8.png" alt="image-20210126134644298" style="zoom:80%;" /></p>
+</li>
+</ul>
+<h4 id="2-6-具体例子"><a href="#2-6-具体例子" class="headerlink" title="2.6 具体例子"></a>2.6 具体例子</h4><ul>
+<li><p>针对2.3节的例子：假设只有一个参数，即 $h=\Theta x$ ，BGD：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_9.jpg" alt="微信图片_20210126143517" style="zoom: 50%;" /></p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_10.jpg" alt="微信图片_20210126143527" style="zoom:50%;" /></p>
+<h4 id="2-7-多变量线性回归"><a href="#2-7-多变量线性回归" class="headerlink" title="2.7 多变量线性回归"></a>2.7 多变量线性回归</h4><ul>
+<li><p>多变量假设函数：引入 $x_0=1$</p>
+<script type="math/tex; mode=display">
+h_\Theta(x)=\Theta_0x_0+\Theta_1x_1+\Theta_2x_2+...+\Theta_nx_n</script></li>
+<li><p>参数是n+1维的向量，任何一个训练实例也是n+1维的向量。矩阵特征X的维度是m*(n+1)。因此公式可以简化为：$h_\Theta(x)=\Theta^TX$</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_11.png" alt="image-20210126144822576" style="zoom:80%;" /></p>
+<ul>
+<li><p>同时更新：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_12.png" alt="image-20210126144923471" style="zoom:80%;" /></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c7e642877b0e">例子来源</a>：假设有代价函数  $J(\Theta)=\Theta_1^2+\Theta_2^2$</p>
+<p>初始化两参数：$\Theta^0=(1,3)$</p>
+<p>初始学习率：$\alpha=0.1$</p>
+<p>函数梯度：$\bigtriangledown J(\Theta)=(2\Theta_1,2\Theta_2)$</p>
+<p>多次迭代：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/ML0_13.png" alt="image-20210126145852982" style="zoom: 67%;" /></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者:  </strong>Chuony
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接: </strong>
+    <a href="http://chuony.github.io/posts/62197/" title="机器学习导论">http://chuony.github.io/posts/62197/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/37733/" rel="prev" title="Hexo">
+      <i class="fa fa-chevron-left"></i> Hexo
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/3444/" rel="next" title="操作系统">
+      操作系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8D%95%E5%8F%98%E9%87%8F%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-text">2 单变量线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E6%A8%A1%E5%9E%8B%E8%A1%A8%E7%A4%BA"><span class="nav-text">2.1 模型表示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-text">2.2 代价函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E4%B8%BE%E4%BE%8B%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3"><span class="nav-text">2.3 举例直观理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E6%B1%82%E5%87%BD%E6%95%B0%E6%9C%80%E5%B0%8F%E5%80%BC%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-text">2.4 求函数最小值的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%9A%84%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-text">2.5 梯度下降的线性回归</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-%E5%85%B7%E4%BD%93%E4%BE%8B%E5%AD%90"><span class="nav-text">2.6 具体例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-7-%E5%A4%9A%E5%8F%98%E9%87%8F%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-text">2.7 多变量线性回归</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chuony"
+      src="/images/xi.jpg">
+  <p class="site-author-name" itemprop="name">Chuony</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chuony" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chuony" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:erali770@163.com" title="E-Mail → mailto:erali770@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chuony</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">59k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">54 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

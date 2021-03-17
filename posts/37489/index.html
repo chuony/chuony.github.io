@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Kaggle泰坦尼克号数据预处理之后我们的数据变得干净，对于后期分析与建模有很大的帮助。本篇为大家介绍数据可视化的内容，以Python的数据可视化库Matplotlib为例，让数据更直观、更有说服力，对于后期优化方案也是很有帮助的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【数据可视化】Kaggle泰坦尼克号项目(四)">
+<meta property="og:url" content="http://chuony.github.io/posts/37489/index.html">
+<meta property="og:site_name" content="Chuony&#39; Blog">
+<meta property="og:description" content="Kaggle泰坦尼克号数据预处理之后我们的数据变得干净，对于后期分析与建模有很大的帮助。本篇为大家介绍数据可视化的内容，以Python的数据可视化库Matplotlib为例，让数据更直观、更有说服力，对于后期优化方案也是很有帮助的。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/Figure_1.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/Figure_2.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/bar.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/hist.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/scatter.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/pie.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/fig_3.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/fig_4.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/stack_.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/fig_5.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/fig_7.png">
+<meta property="og:image" content="http://chuony.github.io/posts/37489/fig_6.png">
+<meta property="article:published_time" content="2020-08-25T14:45:31.000Z">
+<meta property="article:modified_time" content="2020-09-23T09:40:03.934Z">
+<meta property="article:author" content="Chuony">
+<meta property="article:tag" content="Data Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://chuony.github.io/posts/37489/Figure_1.png">
+
+<link rel="canonical" href="http://chuony.github.io/posts/37489/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【数据可视化】Kaggle泰坦尼克号项目(四) | Chuony' Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chuony' Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/37489/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/xi.jpg">
+      <meta itemprop="name" content="Chuony">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chuony' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【数据可视化】Kaggle泰坦尼克号项目(四)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-25 22:45:31" itemprop="dateCreated datePublished" datetime="2020-08-25T22:45:31+08:00">2020-08-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-23 17:40:03" itemprop="dateModified" datetime="2020-09-23T17:40:03+08:00">2020-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Analysis/" itemprop="url" rel="index"><span itemprop="name">Data Analysis</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Kaggle泰坦尼克号"><a href="#Kaggle泰坦尼克号" class="headerlink" title="Kaggle泰坦尼克号"></a>Kaggle泰坦尼克号</h3><p>数据预处理之后我们的数据变得干净，对于后期分析与建模有很大的帮助。本篇为大家介绍数据可视化的内容，以Python的数据可视化库Matplotlib为例，让数据更直观、更有说服力，对于后期优化方案也是很有帮助的。</p>
+<span id="more"></span>
+<h3 id="Matplotlib"><a href="#Matplotlib" class="headerlink" title="Matplotlib"></a>Matplotlib</h3><p>通过下述代码可绘制一个简单的线图</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline    <span class="comment"># 在行内</span></span><br><span class="line">%matplotlib notebook  <span class="comment"># 单独窗口</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">data = np.arange(<span class="number">10</span>)</span><br><span class="line">plt.plot(data)</span><br></pre></td></tr></table></figure>
+<p><img src="Figure_1.png" alt="Figure_1"></p>
+<p><strong>图例、标题和标签</strong></p>
+<p>很多时候，我们看到图形中带有标题，轴域（即两条坐标轴围成的区域）上的标签和图例，便于他人阅读。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">y = [<span class="number">5</span>,<span class="number">7</span>,<span class="number">4</span>]</span><br><span class="line">x2 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">y2 = [<span class="number">10</span>,<span class="number">14</span>,<span class="number">12</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(x, y, label=<span class="string">&#x27;First Line&#x27;</span>)</span><br><span class="line">plt.plot(x2, y2, label=<span class="string">&#x27;Second Line&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>通过添加参数label，为线条指定名称</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.xlabel(<span class="string">&#x27;Plot Number&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Important var&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;Interesting Graph\nCheck it out&#x27;</span>)</span><br><span class="line">plt.legend()             <span class="comment"># 默认图例</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="Figure_2.png" alt="Figure_2"></p>
+<p><strong>基本图形绘制</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.plot()        <span class="comment"># 折线图</span></span><br><span class="line">plt.bar()         <span class="comment"># 条形图（柱形图）</span></span><br><span class="line">plt.hist()        <span class="comment"># 直方图</span></span><br><span class="line">plt.scatter()     <span class="comment"># 散点图</span></span><br><span class="line">plt.pie()         <span class="comment"># 饼状图</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>折线图适合可视化某个属性值随时间变化的走势。</p>
+</li>
+<li><p>条形图与直方图虽长相类似，但条形图通常用来比较变量，横轴是类别，不同条可以任意重新排序；直方图通常用来呈现变量分布，横轴是量化数据，不同柱一般不能重新排序。因此条形图和直方图可用来可视化单一变量。</p>
+</li>
+<li><p>散点图要输入x、y，查看两个变量的关系。</p>
+</li>
+<li><p>饼状图即看变量的分布情况。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    numpy.random.rand(d0,d1,…dn) :以给定的形状创建一个数组，并在数组中加入在[0,1]之间均匀分布的随机样本；</span></span><br><span class="line"><span class="string">    numpy.random.randn(d0,d1,…dn) :以给定的形状创建一个数组，数组元素来符合标准正态分布N(0,1)；</span></span><br><span class="line"><span class="string">    numpy.random.randint(low,high=None,size=None,dtype) :生成在半开半闭区间[low,high)上离散均匀分布的整数值;若high=None，则取值区间变为[0,low)。</span></span><br><span class="line"><span class="string">    np.random.seed(0)  随机种子</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="条形图"><a href="#条形图" class="headerlink" title="条形图"></a>条形图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">N=<span class="number">5</span></span><br><span class="line">y=[<span class="number">20</span>,<span class="number">10</span>,<span class="number">30</span>,<span class="number">25</span>,<span class="number">15</span>]</span><br><span class="line">index=np.arange(N)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    left：x轴的位置序列(index),一般采用arange函数产生一个序列</span></span><br><span class="line"><span class="string">    height：y轴的数值序列，也就是柱形图的高度(y)，一般是我们需要展示的数据</span></span><br><span class="line"><span class="string">    alpha：透明度</span></span><br><span class="line"><span class="string">    width：柱形图的宽度</span></span><br><span class="line"><span class="string">    color：柱形图填充的颜色</span></span><br><span class="line"><span class="string">    label：每个图像代表的意义</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">plt.bar(index,y,color=<span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="bar.png" alt="bar"></p>
+<h4 id="直方图"><a href="#直方图" class="headerlink" title="直方图"></a>直方图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">2018</span>)   <span class="comment"># 括号内随便数字，每次随机出的数都相同，方便调试</span></span><br><span class="line"></span><br><span class="line">mu, sigma = <span class="number">100</span>, <span class="number">15</span></span><br><span class="line">x = mu + sigma * np.random.randn(<span class="number">10000</span>)  <span class="comment"># 从标准正态分布的数据中随机抽取10000个数</span></span><br><span class="line"></span><br><span class="line">n, bins, patches = plt.hist(x, bins=<span class="number">20</span>, normed=<span class="number">1</span>, color=<span class="string">&#x27;b&#x27;</span>, alpha=<span class="number">0.5</span>)   </span><br><span class="line"><span class="comment"># bins:20个柱子；normed:为True是频率图，False是频数图，默认为False   </span></span><br><span class="line">print(<span class="string">&quot;n=&quot;</span>,n)         <span class="comment">#  表示每一个柱子的值</span></span><br><span class="line">print(<span class="string">&quot;bins=&quot;</span>,bins)   <span class="comment">#  表示每一个区间</span></span><br><span class="line">print(<span class="string">&quot;bins=&quot;</span>,patches)        <span class="comment"># 表示每一个柱子</span></span><br><span class="line"></span><br><span class="line">plt.xlabel(<span class="string">&#x27;Smarts&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Probability&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;Histogram of IQ&#x27;</span>)</span><br><span class="line">plt.text(<span class="number">60</span>, <span class="number">.025</span>, <span class="string">r&#x27;$\mu=100,\ \sigma=15$&#x27;</span>)</span><br><span class="line">plt.axis([<span class="number">40</span>, <span class="number">160</span>, <span class="number">0</span>, <span class="number">0.03</span>])     <span class="comment">#  轴域 axis([xmin, xmax, ymin, ymax])</span></span><br><span class="line">plt.grid(<span class="literal">True</span>)                   <span class="comment">#  网格</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="hist.png" alt="hist"></p>
+<h4 id="散点图"><a href="#散点图" class="headerlink" title="散点图"></a>散点图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">N = <span class="number">50</span></span><br><span class="line">x = np.random.rand(N)</span><br><span class="line">y = np.random.rand(N)</span><br><span class="line">colors = np.random.rand(N)</span><br><span class="line">area = np.pi * (<span class="number">15</span> * np.random.rand(N))**<span class="number">2</span>      <span class="comment"># 0 to 15 point radii </span></span><br><span class="line"></span><br><span class="line">plt.scatter(x, y, s=area, c=colors, alpha=<span class="number">0.5</span>)  <span class="comment"># s表示点的大小，c表示颜色</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="scatter.png" alt="scatter"></p>
+<h4 id="饼状图"><a href="#饼状图" class="headerlink" title="饼状图"></a>饼状图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">labels = <span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;D&#x27;</span>     <span class="comment"># 标签</span></span><br><span class="line">sizes = [<span class="number">25</span>, <span class="number">35</span>, <span class="number">30</span>, <span class="number">10</span>]        <span class="comment"># 比例，默认整体为1</span></span><br><span class="line">explode = (<span class="number">0</span>, <span class="number">0.08</span>, <span class="number">0</span>, <span class="number">0</span>)       <span class="comment"># 距离圆心的距离</span></span><br><span class="line"></span><br><span class="line">plt.pie(sizes, explode=explode, labels=labels, autopct=<span class="string">&#x27;%1.1f%%&#x27;</span>) </span><br><span class="line"><span class="comment"># autopct表示图中的数字的位置</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="pie.png" alt="pie"></p>
+<p><strong>参考</strong>：<a target="_blank" rel="noopener" href="https://kdd-team.netlify.app/posts/142_邺调_数据可视化/">邺调_数据可视化</a></p>
+<h4 id="Sub-plots"><a href="#Sub-plots" class="headerlink" title="Sub-plots"></a>Sub-plots</h4><p>matplotlib的图像都位于Figure对象中，相当于一个画布，可以用plt.figure创建一个新的Figure。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#plt.figure()</span></span><br><span class="line">plt.subplot(<span class="number">211</span>)                  <span class="comment"># 两行一列的第一个图像</span></span><br><span class="line">plt.plot([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])                 <span class="comment"># 先设置位置，再设置数据</span></span><br><span class="line">plt.subplot(<span class="number">212</span>, facecolor=<span class="string">&#x27;y&#x27;</span>) </span><br><span class="line">plt.plot(<span class="built_in">range</span>(<span class="number">12</span>))</span><br></pre></td></tr></table></figure>
+<p>ps：plt与ax是两种不同的画图方式。里边所使用的方法有区别，plt较简单，建议熟练运用一种，不要一起混着用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fig = plt.figure()</span><br></pre></td></tr></table></figure>
+<p>此时弹出一个空窗口，不能通过空Figure绘图，必须创建一个或多个subplot。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 图像是2x2(即最多4张图)，且当前选中的是4个subplot中的第一个(编号从1开始)</span></span><br><span class="line">ax1 = fig.add_subplot(<span class="number">221</span>)</span><br><span class="line">ax2 = fig.add_subplot(<span class="number">222</span>)</span><br><span class="line">ax3 = fig.add_subplot(<span class="number">223</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="动手尝试"><a href="#动手尝试" class="headerlink" title="动手尝试"></a>动手尝试</h3><p>pandas.DataFrame.plot ： Pandas的DataFrame和Series，在matplotlib基础上封装了一个简易的绘图函数, 使得我们在数据处理过程中方便可视化查看结果。但不如matplotlib灵活</p>
+<p><strong>任务</strong>：可视化展示泰坦尼克号数据集中男女中生存人数分布情况（柱状图）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sex &#x3D; text.groupby(&#39;Sex&#39;)[&#39;Survived&#39;].sum()</span><br><span class="line">sex.plot.bar()</span><br><span class="line">plt.title(&#39;survived_count&#39;)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="fig_3.png" alt="fig_3"></p>
+<p><strong>任务</strong>：可视化展示泰坦尼克号数据集中男女中生存人与死亡人数的比例图（柱状图）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">text.groupby([<span class="string">&#x27;Sex&#x27;</span>,<span class="string">&#x27;Survived&#x27;</span>])\</span><br><span class="line">[<span class="string">&#x27;Survived&#x27;</span>].count().unstack().plot(kind=<span class="string">&#x27;bar&#x27;</span>,stacked=<span class="string">&#x27;True&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    unstack将其转化为Dataframe，若无此操作横坐标为两个变量（下面有例子）</span></span><br><span class="line"><span class="string">    横坐标为index(sex)，纵坐标为colunms(survived)</span></span><br><span class="line"><span class="string">    stacked为True时会叠加，默认分开</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">plt.title(<span class="string">&#x27;survived_count&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;count&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_4.png" alt="fig_4"></p>
+<p>删掉stacked参数</p>
+<p><img src="stack_.png" alt="stack_"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 结果一致</span></span><br><span class="line">text.groupby([<span class="string">&#x27;Fare&#x27;</span>,<span class="string">&#x27;Survived&#x27;</span>])[<span class="string">&#x27;Survived&#x27;</span>].count()</span><br><span class="line">text.groupby([<span class="string">&#x27;Fare&#x27;</span>])[<span class="string">&#x27;Survived&#x27;</span>].value_counts()</span><br></pre></td></tr></table></figure>
+<p><strong>任务</strong>：可视化展示泰坦尼克号数据集中不同票价的人生存和死亡人数分布情况。（用折线图，横轴是不同票价，纵轴是存活人数）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 排序后绘折线图</span></span><br><span class="line">fare_sur = text.groupby([<span class="string">&#x27;Fare&#x27;</span>])\</span><br><span class="line">[<span class="string">&#x27;Survived&#x27;</span>].value_counts().sort_values(ascending=<span class="literal">False</span>) <span class="comment"># 没有使用unstack()</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">结果一致：</span></span><br><span class="line"><span class="string">	text.groupby([&#x27;Fare&#x27;,&#x27;Survived&#x27;])[&#x27;Survived&#x27;].count()</span></span><br><span class="line"><span class="string">	text.groupby([&#x27;Fare&#x27;])[&#x27;Survived&#x27;].value_counts()</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">fig = plt.figure(figsize=(<span class="number">20</span>, <span class="number">7</span>))</span><br><span class="line">fare_sur.plot(grid=<span class="literal">True</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="fig_5.png" alt="fig_5"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 排序前绘折线图</span></span><br><span class="line">fare_sur1 = text.groupby([<span class="string">&#x27;Fare&#x27;</span>])[<span class="string">&#x27;Survived&#x27;</span>].value_counts()</span><br><span class="line">fare_sur1</span><br><span class="line">fig = plt.figure(figsize=(<span class="number">20</span>, <span class="number">7</span>))</span><br><span class="line">fare_sur1.plot(grid=<span class="literal">True</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="fig_7.png" alt="fig_7"></p>
+<p><strong>任务</strong>：可视化展示泰坦尼克号数据集中不同仓位等级的人年龄分布情况</p>
+<p>密度图：与直方图相关的一种类型图，通过计算“可能会产生观测数据的连续概率分布的估计”而产生。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回仓位等级为1时的索引与年龄值</span></span><br><span class="line">text.Age[text.Pclass == <span class="number">1</span>].head()</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">    <span class="number">1</span>     <span class="number">38.0</span></span><br><span class="line">    <span class="number">3</span>     <span class="number">35.0</span></span><br><span class="line">    <span class="number">6</span>     <span class="number">54.0</span></span><br><span class="line">    <span class="number">11</span>    <span class="number">58.0</span></span><br><span class="line">    <span class="number">23</span>    <span class="number">28.0</span></span><br><span class="line">    Name: Age, dtype: float64</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">text.Age[text.Pclass == <span class="number">1</span>].plot(kind=<span class="string">&#x27;kde&#x27;</span>)      <span class="comment"># kde:密度图</span></span><br><span class="line">text.Age[text.Pclass == <span class="number">2</span>].plot(kind=<span class="string">&#x27;kde&#x27;</span>)</span><br><span class="line">text.Age[text.Pclass == <span class="number">3</span>].plot(kind=<span class="string">&#x27;kde&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;age&quot;</span>)</span><br><span class="line">plt.legend((<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),loc=<span class="string">&quot;best&quot;</span>)                  <span class="comment"># loc:图例位置</span></span><br></pre></td></tr></table></figure>
+<p><img src="fig_6.png" alt="fig_6"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者:  </strong>Chuony
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接: </strong>
+    <a href="http://chuony.github.io/posts/37489/" title="【数据可视化】Kaggle泰坦尼克号项目(四)">http://chuony.github.io/posts/37489/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Analysis/" rel="tag"><i class="fa fa-tag"></i>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/17999/" rel="prev" title="【数据重构】Kaggle泰坦尼克号项目(三)">
+      <i class="fa fa-chevron-left"></i> 【数据重构】Kaggle泰坦尼克号项目(三)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/51657/" rel="next" title="【模型搭建和评估】Kaggle泰坦尼克号项目(五)">
+      【模型搭建和评估】Kaggle泰坦尼克号项目(五) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kaggle%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%8F%B7"><span class="nav-text">Kaggle泰坦尼克号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Matplotlib"><span class="nav-text">Matplotlib</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E5%BD%A2%E5%9B%BE"><span class="nav-text">条形图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="nav-text">直方图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%A3%E7%82%B9%E5%9B%BE"><span class="nav-text">散点图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A5%BC%E7%8A%B6%E5%9B%BE"><span class="nav-text">饼状图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sub-plots"><span class="nav-text">Sub-plots</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%89%8B%E5%B0%9D%E8%AF%95"><span class="nav-text">动手尝试</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chuony"
+      src="/images/xi.jpg">
+  <p class="site-author-name" itemprop="name">Chuony</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chuony" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chuony" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:erali770@163.com" title="E-Mail → mailto:erali770@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chuony</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">59k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">54 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
