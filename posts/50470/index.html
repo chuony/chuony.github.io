@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134645.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815142641.png">
 <meta property="article:published_time" content="2020-10-26T13:28:21.000Z">
-<meta property="article:modified_time" content="2021-08-15T08:05:19.463Z">
+<meta property="article:modified_time" content="2021-08-15T13:37:43.001Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -195,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-15 16:05:19" itemprop="dateModified" datetime="2021-08-15T16:05:19+08:00">2021-08-15</time>
+                <time title="Modified: 2021-08-15 21:37:43" itemprop="dateModified" datetime="2021-08-15T21:37:43+08:00">2021-08-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,14 +220,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>8.2k</span>
+              <span>8.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>7 mins.</span>
+              <span>8 mins.</span>
             </span>
 
         </div>
@@ -289,22 +289,24 @@ p(s)=p(w_1,w_2,...,w_n)
 pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h4><ul>
 <li><p><strong>前馈神经网络语言模型（NNLM）</strong></p>
 <p>2003年Bengio提出的模型：<strong>A Neural Probabilistic Language Model</strong></p>
+<p>NNLM是基于<strong>语言模型</strong>这个任务来训练模型。<strong>因为要得到正确的词向量所以要训练，如何训练才能让其更符合语法和语义？——语言模型</strong></p>
+<p>模型训练好后，词向量这个<strong>“副产物”</strong>就可以拿来使用了。<strong>把计算概率（由于词汇太多要计算概率太多）转化为参数学习，训练参数就容易多了。</strong></p>
 <blockquote>
 <p> 根据前n-1个单词预测第n个单词的概率。分为输入层、隐藏层和输出层。</p>
 <ul>
-<li><p>输入层：将词汇表大小的one-hot向量映射到固定维度的向量。相当于1xV与VxD的向量相乘得到1xD的向量（V是词汇表大小，D是超参数）。<strong>实际代码输入的是Index</strong>。</p>
+<li><p>输入层(映射层)：将词汇表大小的one-hot向量映射到固定维度的向量。相当于1xV与VxD的向量相乘得到1xD的向量（V是词汇表大小，D是超参数）。<strong>实际代码输入的是Index</strong>。</p>
 </li>
 <li><p>隐藏层：一个以tanh为激活函数的全连接层。</p>
 </li>
 <li><p>输出层：全连接层+softmax输出词汇表维度的概率分布。其中$y$是全连接层输出1xV大小的向量：</p>
+<script type="math/tex; mode=display">
+p(w_t|w_{t-n+1}\dots w_{t-1})=\frac{exp(y_{w_t})}{\sum_iexp(y_i)}</script></li>
+<li><p>损失函数Loss:</p>
+<script type="math/tex; mode=display">
+L=-\frac{1}{T}\sum_{i=1}^Tlogp(w_i|w_{i-n+1}\dots w_{i-1})</script><p><strong>输入层的权值（矩阵C）就等效为我们需要的词向量表征（查表操作）</strong></p>
 </li>
 </ul>
-<script type="math/tex; mode=display">
-p(w_t|w_{t-n+1}\dots w_{t-1})=\frac{exp(y_{w_t})}{\sum_iexp(y_i)}</script><ul>
-<li>损失函数Loss:</li>
-</ul>
-<script type="math/tex; mode=display">
-L=-\frac{1}{T}\sum_{i=1}^Tlogp(w_i|w_{i-n+1}\dots w_{i-1})</script></blockquote>
+</blockquote>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815142641.png" alt="image-20210815142640989" style="zoom:80%;" /></p>
 </li>
 <li><p><strong>循环神经网络语言模型（RNNLM）</strong></p>
@@ -503,7 +505,7 @@ cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)=-log \, q_m \</scr
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -563,12 +565,12 @@ cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)=-log \, q_m \</scr
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">68k</span>
+    <span title="Symbols count total">70k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:02</span>
+    <span title="Reading time total">1:04</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
   </div>
