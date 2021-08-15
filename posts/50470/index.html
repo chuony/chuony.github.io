@@ -28,7 +28,7 @@
 <meta property="og:description" content="Word2vec由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-26T13:28:21.000Z">
-<meta property="article:modified_time" content="2021-08-15T05:22:55.020Z">
+<meta property="article:modified_time" content="2021-08-15T05:25:31.680Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-15 13:22:55" itemprop="dateModified" datetime="2021-08-15T13:22:55+08:00">2021-08-15</time>
+                <time title="Modified: 2021-08-15 13:25:31" itemprop="dateModified" datetime="2021-08-15T13:25:31+08:00">2021-08-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,7 +250,7 @@
 <li><strong>语言模型</strong>：计算一句话所存在的概率。对于语句$s=w_1w_2…w_m$的先验概率为：</li>
 </ul>
 <script type="math/tex; mode=display">
-p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
+p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})  
     =\prod^m_{i=1}p(w_i|w_1...w_{i-1})</script><p>当$i=1$时，$p(w_1|w_0)=p(w_1)$</p>
 <blockquote>
 <p>随着历史基元数量的增加，模型中包含指数级别个自由参数。</p>
