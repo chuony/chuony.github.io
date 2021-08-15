@@ -28,7 +28,7 @@
 <meta property="og:description" content="Word2vec由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-26T13:28:21.000Z">
-<meta property="article:modified_time" content="2021-05-28T07:23:12.856Z">
+<meta property="article:modified_time" content="2021-08-15T05:22:55.020Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-28 15:23:12" itemprop="dateModified" datetime="2021-05-28T15:23:12+08:00">2021-05-28</time>
+                <time title="Modified: 2021-08-15 13:22:55" itemprop="dateModified" datetime="2021-08-15T13:22:55+08:00">2021-08-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,7 +216,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>792</span>
+              <span>939</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -237,29 +237,45 @@
       
         <h3 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h3><p>由谷歌在论文<strong>Efficient Estimation of Word Representations in Vector Space</strong>中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。</p>
 <span id="more"></span>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>词向量分为：<strong>独热表示与分布式表示</strong>。</p>
+<h3 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h3><ul>
+<li><p>词向量分为：<strong>独热表示与分布式表示</strong>。</p>
 <ul>
 <li>独热表示由于数据稀疏等一系列问题逐渐被淘汰，取而代之的是分布式表示，即将词的语义分布地存储在各个维度中，将维度进行了压缩也就是词嵌入概念。</li>
 </ul>
-<p>产生分布式词向量模型：<strong>非神经网络模型与神经网络模型</strong>。</p>
-<h4 id="统计语言模型"><a href="#统计语言模型" class="headerlink" title="统计语言模型"></a>统计语言模型</h4><p><strong>语言模型</strong>：计算一句话所存在的概率。对于语句$s=w_1w_2…w_m$的先验概率为：</p>
+</li>
+<li><p>产生分布式词向量模型：<strong>非神经网络模型与神经网络模型</strong>。</p>
+</li>
+</ul>
+<h4 id="统计语言模型"><a href="#统计语言模型" class="headerlink" title="统计语言模型"></a>统计语言模型</h4><ul>
+<li><strong>语言模型</strong>：计算一句话所存在的概率。对于语句$s=w_1w_2…w_m$的先验概率为：</li>
+</ul>
 <script type="math/tex; mode=display">
 p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
     =\prod^m_{i=1}p(w_i|w_1...w_{i-1})</script><p>当$i=1$时，$p(w_1|w_0)=p(w_1)$</p>
-<ul>
-<li>随着历史基元数量的增加，模型中包含指数级别个自由参数。</li>
-<li>n元语法模型（n-gram model）：n=1时，一元文法uni-gram；n=2时，2-gram(bi-gram)被称为1阶马尔科夫链；n=3时，3-gram（tri-gram）被称为2阶马尔科夫链。</li>
-</ul>
+<blockquote>
+<p>随着历史基元数量的增加，模型中包含指数级别个自由参数。</p>
+<p>n元语法模型（n-gram model）：n=1时，一元文法uni-gram；n=2时，2-gram(bi-gram)被称为1阶马尔科夫链；n=3时，3-gram（tri-gram）被称为2阶马尔科夫链。</p>
+</blockquote>
 <p><strong>n-gram</strong>：实际上就是n个临近词构成的一个n元词组。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">例：今天天气比较热</span><br><span class="line">分词后：今天/天气/比较/热</span><br><span class="line">bi-grams：今天/天气，天气/比较，比较/热，热/</span><br><span class="line">tri-grams：今天/天气/比较，天气/比较/热，比较/热</span><br></pre></td></tr></table></figure>
-<p><strong>求解：如何获得n元语法模型——参数估计</strong></p>
+<blockquote>
+<p>例：今天天气比较热<br>分词后：今天/天气/比较/热<br>bi-grams：今天/天气，天气/比较，比较/热，热/<br>tri-grams：今天/天气/比较，天气/比较/热，比较/热</p>
+</blockquote>
+<ul>
+<li><p><strong>求解：如何获得n元语法模型——参数估计</strong></p>
 <ul>
 <li>训练语料：用于建立模型，确定参数的已知语料；</li>
 <li>最大似然估计（MLE）：用相对频率计算概率的方法。</li>
 </ul>
-<p><strong>数据稀疏引起零概率问题，如何解决？——数据平滑</strong></p>
-<p><strong>评价指标：困惑度</strong></p>
-<h4 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h4>
+</li>
+<li><p><strong>数据稀疏引起零概率问题，如何解决？——数据平滑</strong></p>
+</li>
+<li><p><strong>评价指标：困惑度</strong>——句子概率越大，语言模型越好，困惑度越小</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+p(s)=p(w_1,w_2,...,w_n)
+=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})</script><script type="math/tex; mode=display">
+pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h4>
     </div>
 
     
@@ -359,7 +375,7 @@ p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word2vec"><span class="nav-text">Word2vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-text">统计语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">神经网络模型</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word2vec"><span class="nav-text">Word2vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0. 前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-text">统计语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">神经网络模型</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -519,6 +535,59 @@ p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
