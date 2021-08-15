@@ -20,18 +20,18 @@
     var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="【Word2vec】词向量入门1——NNLM由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
+  <meta name="description" content="Word2vec由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Word2vec1">
+<meta property="og:title" content="【Word2vec】词向量入门1——NNLM">
 <meta property="og:url" content="http://chuony.github.io/posts/50470/index.html">
 <meta property="og:site_name" content="Chuony&#39; Blog">
-<meta property="og:description" content="【Word2vec】词向量入门1——NNLM由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
+<meta property="og:description" content="Word2vec由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134632.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134645.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815142641.png">
 <meta property="article:published_time" content="2020-10-26T13:28:21.000Z">
-<meta property="article:modified_time" content="2021-08-15T07:57:30.677Z">
+<meta property="article:modified_time" content="2021-08-15T08:05:19.463Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>Word2vec1 | Chuony' Blog</title>
+  <title>【Word2vec】词向量入门1——NNLM | Chuony' Blog</title>
   
 
 
@@ -178,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Word2vec1
+          【Word2vec】词向量入门1——NNLM
         </h1>
 
         <div class="post-meta">
@@ -195,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-15 15:57:30" itemprop="dateModified" datetime="2021-08-15T15:57:30+08:00">2021-08-15</time>
+                <time title="Modified: 2021-08-15 16:05:19" itemprop="dateModified" datetime="2021-08-15T16:05:19+08:00">2021-08-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +239,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="【Word2vec】词向量入门1——NNLM"><a href="#【Word2vec】词向量入门1——NNLM" class="headerlink" title="【Word2vec】词向量入门1——NNLM"></a>【Word2vec】词向量入门1——NNLM</h3><p>由谷歌在论文<strong>Efficient Estimation of Word Representations in Vector Space</strong>中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。</p>
+        <h3 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h3><p>由谷歌在论文<strong>Efficient Estimation of Word Representations in Vector Space</strong>中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。</p>
 <span id="more"></span>
 <h3 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h3><ul>
 <li><p>词向量分为：<strong>独热表示（one-hot）与分布式表示</strong>。</p>
@@ -288,7 +288,7 @@ p(s)=p(w_1,w_2,...,w_n)
 =p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})</script><script type="math/tex; mode=display">
 pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h4><ul>
 <li><p><strong>前馈神经网络语言模型（NNLM）</strong></p>
-<p>2003年Bengio提出的模型：A Neural Probabilistic Language Model</p>
+<p>2003年Bengio提出的模型：<strong>A Neural Probabilistic Language Model</strong></p>
 <blockquote>
 <p> 根据前n-1个单词预测第n个单词的概率。分为输入层、隐藏层和输出层。</p>
 <ul>
@@ -343,8 +343,7 @@ L=-\frac{1}{T}\sum_{i=1}^Tlogp(w_i|w_{i-n+1}\dots w_{i-1})</script></blockquote>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Predict 预测值</span></span><br><span class="line">predict = model(input_batch).data.<span class="built_in">max</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)[<span class="number">1</span>]  <span class="comment"># 不加.data也可</span></span><br><span class="line">predict</span><br><span class="line">&gt;&gt; tensor([[<span class="number">2</span>],</span><br><span class="line">           [<span class="number">5</span>],</span><br><span class="line">           [<span class="number">1</span>]])</span><br></pre></td></tr></table></figure>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pytorch中的tensor不能作为字典的键：n.item()</span></span><br><span class="line">print([sen.split()[:<span class="number">2</span>] <span class="keyword">for</span> sen <span class="keyword">in</span> sentences], <span class="string">&#x27;-&gt;&#x27;</span>, [number_dict[n.item()] <span class="keyword">for</span> n <span class="keyword">in</span> predict.squeeze()]) </span><br><span class="line">&gt;&gt; </span><br><span class="line">	[[&#x27;i&#x27;, &#x27;like&#x27;], [&#x27;i&#x27;, &#x27;love&#x27;], [&#x27;i&#x27;, &#x27;hate&#x27;]] -&gt; [&#x27;dog&#x27;, &#x27;coffee&#x27;, &#x27;milk&#x27;]</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong></p>
-<ul>
+<h4 id="Note"><a href="#Note" class="headerlink" title="Note:"></a>Note:</h4><ul>
 <li>我们所理解的是列向量：[300*1] ,实验中输入参数反过来：[batch_size*n_dim]  (输入维度，输出维度)。<a target="_blank" rel="noopener" href="https://blog.csdn.net/Pit3369/article/details/104513784">参考</a></li>
 </ul>
 <blockquote>
@@ -403,7 +402,7 @@ cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)=-log \, q_m \</scr
   </li>
   <li class="post-copyright-link">
     <strong>本文链接: </strong>
-    <a href="http://chuony.github.io/posts/50470/" title="Word2vec1">http://chuony.github.io/posts/50470/</a>
+    <a href="http://chuony.github.io/posts/50470/" title="【Word2vec】词向量入门1——NNLM">http://chuony.github.io/posts/50470/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -488,7 +487,7 @@ cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)=-log \, q_m \</scr
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Word2vec%E3%80%91%E8%AF%8D%E5%90%91%E9%87%8F%E5%85%A5%E9%97%A81%E2%80%94%E2%80%94NNLM"><span class="nav-text">【Word2vec】词向量入门1——NNLM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0. 前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-text">统计语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">神经网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B%EF%BC%9ANNLM"><span class="nav-text">举例：NNLM</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word2vec"><span class="nav-text">Word2vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0. 前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-text">统计语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">神经网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B%EF%BC%9ANNLM"><span class="nav-text">举例：NNLM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Note"><span class="nav-text">Note:</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -564,7 +563,7 @@ cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)=-log \, q_m \</scr
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">69k</span>
+    <span title="Symbols count total">68k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
