@@ -20,18 +20,22 @@
     var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Word2vec由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
+  <meta name="description" content="【Word2vec】词向量入门1——NNLM由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Word2vec">
+<meta property="og:title" content="Word2vec1">
 <meta property="og:url" content="http://chuony.github.io/posts/50470/index.html">
 <meta property="og:site_name" content="Chuony&#39; Blog">
-<meta property="og:description" content="Word2vec由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
+<meta property="og:description" content="【Word2vec】词向量入门1——NNLM由谷歌在论文Efficient Estimation of Word Representations in Vector Space中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134632.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134645.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815142641.png">
 <meta property="article:published_time" content="2020-10-26T13:28:21.000Z">
-<meta property="article:modified_time" content="2021-08-15T05:25:31.680Z">
+<meta property="article:modified_time" content="2021-08-15T07:57:30.677Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134632.png">
 
 <link rel="canonical" href="http://chuony.github.io/posts/50470/">
 
@@ -46,7 +50,7 @@
   };
 </script>
 
-  <title>Word2vec | Chuony' Blog</title>
+  <title>Word2vec1 | Chuony' Blog</title>
   
 
 
@@ -174,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Word2vec
+          Word2vec1
         </h1>
 
         <div class="post-meta">
@@ -191,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-15 13:25:31" itemprop="dateModified" datetime="2021-08-15T13:25:31+08:00">2021-08-15</time>
+                <time title="Modified: 2021-08-15 15:57:30" itemprop="dateModified" datetime="2021-08-15T15:57:30+08:00">2021-08-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,14 +220,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>939</span>
+              <span>8.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>7 mins.</span>
             </span>
 
         </div>
@@ -235,22 +239,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h3><p>由谷歌在论文<strong>Efficient Estimation of Word Representations in Vector Space</strong>中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。</p>
+        <h3 id="【Word2vec】词向量入门1——NNLM"><a href="#【Word2vec】词向量入门1——NNLM" class="headerlink" title="【Word2vec】词向量入门1——NNLM"></a>【Word2vec】词向量入门1——NNLM</h3><p>由谷歌在论文<strong>Efficient Estimation of Word Representations in Vector Space</strong>中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。</p>
 <span id="more"></span>
 <h3 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h3><ul>
-<li><p>词向量分为：<strong>独热表示与分布式表示</strong>。</p>
-<ul>
-<li>独热表示由于数据稀疏等一系列问题逐渐被淘汰，取而代之的是分布式表示，即将词的语义分布地存储在各个维度中，将维度进行了压缩也就是词嵌入概念。</li>
-</ul>
+<li><p>词向量分为：<strong>独热表示（one-hot）与分布式表示</strong>。</p>
 </li>
-<li><p>产生分布式词向量模型：<strong>非神经网络模型与神经网络模型</strong>。</p>
+<li><p>独热表示由于数据稀疏等一系列问题逐渐被淘汰，取而代之的是分布式表示，即将词的语义分布地存储在各个维度中，将维度进行了压缩也就是词嵌入概念。</p>
+<ul>
+<li>对比如图所示：如果要用独热编码来表示一个新的型状，我们就必须增加维数。但是分布式的好处在于可以用现有维度来表示一个新的型状</li>
+</ul>
+<center class="half">    
+    <img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134632.png" alt="main-qimg-8c6ee25a0d46a82eee9fb9d38054db48" style="zoom: 80%;" width="300"/>    
+    <img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134645.png" alt="main-qimg-ff9c9182e8f15474366b76bbe29915f3" style="zoom:80%;" width="300"/> 
+</center>
+</li>
+<li><p>产生分布式词向量模型：<strong>统计语言模型与神经网络语言模型</strong>。</p>
 </li>
 </ul>
 <h4 id="统计语言模型"><a href="#统计语言模型" class="headerlink" title="统计语言模型"></a>统计语言模型</h4><ul>
 <li><strong>语言模型</strong>：计算一句话所存在的概率。对于语句$s=w_1w_2…w_m$的先验概率为：</li>
 </ul>
 <script type="math/tex; mode=display">
-p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})  
+p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
     =\prod^m_{i=1}p(w_i|w_1...w_{i-1})</script><p>当$i=1$时，$p(w_1|w_0)=p(w_1)$</p>
 <blockquote>
 <p>随着历史基元数量的增加，模型中包含指数级别个自由参数。</p>
@@ -261,21 +271,124 @@ p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
 <p>例：今天天气比较热<br>分词后：今天/天气/比较/热<br>bi-grams：今天/天气，天气/比较，比较/热，热/<br>tri-grams：今天/天气/比较，天气/比较/热，比较/热</p>
 </blockquote>
 <ul>
-<li><p><strong>求解：如何获得n元语法模型——参数估计</strong></p>
-<ul>
+<li><strong>求解：如何获得n元语法模型——参数估计</strong><ul>
 <li>训练语料：用于建立模型，确定参数的已知语料；</li>
 <li>最大似然估计（MLE）：用相对频率计算概率的方法。</li>
 </ul>
 </li>
-<li><p><strong>数据稀疏引起零概率问题，如何解决？——数据平滑</strong></p>
+<li><strong>数据稀疏引起零概率问题，如何解决？——数据平滑</strong><ul>
+<li>数据平滑基本思想：调整最大似然估计的概率值，使零概率增值，使非零概率下调，“劫富济贫”，消除零概率，改进模型的整体正确率。</li>
+<li>数据平滑方法：1）加1法：每一种情况出现的次数加1；2）减值法（Good-Turing估计、Back-off方法等）：修改训练样本中事件的实际计数，使样本中实际出现的不同事件的概率之和小于1，剩余的概率量分配给未见概率；</li>
+</ul>
 </li>
-<li><p><strong>评价指标：困惑度</strong>——句子概率越大，语言模型越好，困惑度越小</p>
-</li>
+<li><strong>评价指标：困惑度</strong>——句子概率越大，语言模型越好，困惑度越小</li>
 </ul>
 <script type="math/tex; mode=display">
 p(s)=p(w_1,w_2,...,w_n)
 =p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})</script><script type="math/tex; mode=display">
-pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h4>
+pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h4><ul>
+<li><p><strong>前馈神经网络语言模型（NNLM）</strong></p>
+<p>2003年Bengio提出的模型：A Neural Probabilistic Language Model</p>
+<blockquote>
+<p> 根据前n-1个单词预测第n个单词的概率。分为输入层、隐藏层和输出层。</p>
+<ul>
+<li><p>输入层：将词汇表大小的one-hot向量映射到固定维度的向量。相当于1xV与VxD的向量相乘得到1xD的向量（V是词汇表大小，D是超参数）。<strong>实际代码输入的是Index</strong>。</p>
+</li>
+<li><p>隐藏层：一个以tanh为激活函数的全连接层。</p>
+</li>
+<li><p>输出层：全连接层+softmax输出词汇表维度的概率分布。其中$y$是全连接层输出1xV大小的向量：</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+p(w_t|w_{t-n+1}\dots w_{t-1})=\frac{exp(y_{w_t})}{\sum_iexp(y_i)}</script><ul>
+<li>损失函数Loss:</li>
+</ul>
+<script type="math/tex; mode=display">
+L=-\frac{1}{T}\sum_{i=1}^Tlogp(w_i|w_{i-n+1}\dots w_{i-1})</script></blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815142641.png" alt="image-20210815142640989" style="zoom:80%;" /></p>
+</li>
+<li><p><strong>循环神经网络语言模型（RNNLM）</strong></p>
+<p>与NNLM基本类似。只不过是每个时间步预测一个词，在预测第n个词时使用了前n-1个词的信息（<strong>没有用马尔可夫假设，利用RNN的结构间接实现了</strong>）</p>
+</li>
+</ul>
+<h4 id="举例：NNLM"><a href="#举例：NNLM" class="headerlink" title="举例：NNLM"></a>举例：NNLM</h4><ul>
+<li>下面利用NNLM模型，实现下一单词的预测（这里只列举了几句话作为语料库，换做大型语料库还要注意输入输出的问题）</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/graykode/nlp-tutorial">代码参考</a>：注释以及一些需要注意的问题</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn    </span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br></pre></td></tr></table></figure>
+<ul>
+<li>构造数据集：make_batch函数是将输入sentences中的前面的单词和最后一个单词分开</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_batch</span>(<span class="params">sentences</span>):</span></span><br><span class="line">    input_batch = [] <span class="comment"># 输入的单词</span></span><br><span class="line">    target_batch = [] <span class="comment"># 最后一个单词</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> sen <span class="keyword">in</span> sentences: </span><br><span class="line">        word = sen.split() <span class="comment"># 默认空格分割</span></span><br><span class="line">        <span class="built_in">input</span> = [word_dict[n] <span class="keyword">for</span> n <span class="keyword">in</span> word[:-<span class="number">1</span>]] </span><br><span class="line">        <span class="comment"># 注意这里的切片，[:-1]是刚好最后一个不要</span></span><br><span class="line">        target = word_dict[word[-<span class="number">1</span>]] </span><br><span class="line">        </span><br><span class="line">        input_batch.append(<span class="built_in">input</span>) </span><br><span class="line">        target_batch.append(target)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> input_batch, target_batch</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Model部分：第一种实现（以前pytorch版本：Variable）</li>
+<li>现在进行了更新，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/72452691">以前的版本</a></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NNLM_1</span>(<span class="params">nn.Module</span>):</span> <span class="comment"># 定义网络时一般是继承torch.nn.Module创建新的子类</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span> <span class="comment"># 构造函数</span></span><br><span class="line">        <span class="built_in">super</span>(NNLM, self).__init__() <span class="comment"># 子类构造函数强制调用父类构造函数</span></span><br><span class="line">        <span class="comment"># 参数都是论文中的数学表示</span></span><br><span class="line">        <span class="comment"># 以下是设置神经网络中的各项参数</span></span><br><span class="line">        <span class="comment"># 一个嵌入字典，第一个参数是嵌入字典的大小，第二个参数是每个嵌入向量的大小</span></span><br><span class="line">        <span class="comment"># C词向量C(w)存在于矩阵C(|V|*m)中，矩阵C的行数表示词汇表的大小；列数表示词向量C(w)的维度。矩阵C的某一行对应一个单词的词向量表示</span></span><br><span class="line">        self.C = nn.Embedding(n_class, m)</span><br><span class="line">        <span class="comment"># Parameter类是Variable的子类，常用于模块参数，作为属性时会被自动加入到参数列表中</span></span><br><span class="line">        <span class="comment"># 隐藏层的权重(h*(n-1)m)</span></span><br><span class="line">        self.H = nn.Parameter(torch.randn(n_step * m, n_hidden).<span class="built_in">type</span>(dtype))</span><br><span class="line">        <span class="comment"># 输入层到输出层权重(|V|*(n-1)m)</span></span><br><span class="line">        self.W = nn.Parameter(torch.randn(n_step * m, n_class).<span class="built_in">type</span>(dtype))</span><br><span class="line">        <span class="comment"># 隐藏层偏置bias(h)</span></span><br><span class="line">        self.d = nn.Parameter(torch.randn(n_hidden).<span class="built_in">type</span>(dtype))</span><br><span class="line">        <span class="comment"># 隐藏层到输出层的权重(|V|*h)</span></span><br><span class="line">        self.U = nn.Parameter(torch.randn(n_hidden, n_class).<span class="built_in">type</span>(dtype))</span><br><span class="line">        <span class="comment"># 输出层的偏置bias(|V|)</span></span><br><span class="line">        self.b = nn.Parameter(torch.randn(n_class).<span class="built_in">type</span>(dtype))</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 前向传播过程，如paper中描述</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, X</span>):</span></span><br><span class="line">        X = self.C(X)</span><br><span class="line">        X = X.view(-<span class="number">1</span>, n_step * m) <span class="comment"># [batch_size, n_step * n_class]</span></span><br><span class="line">        tanh = torch.tanh(self.d + torch.mm(X, self.H)) <span class="comment"># [batch_size, n_hidden]</span></span><br><span class="line">        output = self.b + torch.mm(X, self.W) + torch.mm(tanh, self.U) <span class="comment"># [batch_size, n_class]</span></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Model部分：第二种实现</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NNLM</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(NNLM, self).__init__()</span><br><span class="line">        self.C = nn.Embedding(n_class, m)</span><br><span class="line">        self.H = nn.Linear(n_step * m, n_hidden, bias=<span class="literal">False</span>)</span><br><span class="line">        self.d = nn.Parameter(torch.ones(n_hidden))</span><br><span class="line">        self.U = nn.Linear(n_hidden, n_class, bias=<span class="literal">False</span>)</span><br><span class="line">        self.W = nn.Linear(n_step * m, n_class, bias=<span class="literal">False</span>)</span><br><span class="line">        self.b = nn.Parameter(torch.ones(n_class))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, X</span>):</span></span><br><span class="line">        X = self.C(X) <span class="comment"># X : [batch_size, n_step, m]</span></span><br><span class="line">        X = X.view(-<span class="number">1</span>, n_step * m) <span class="comment"># [batch_size, n_step * m]</span></span><br><span class="line">        tanh = torch.tanh(self.d + self.H(X)) <span class="comment"># [batch_size, n_hidden]</span></span><br><span class="line">        output = self.b + self.W(X) + self.U(tanh) <span class="comment"># [batch_size, n_class]</span></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本次将要训练的句子集，也就是输入</span></span><br><span class="line">sentences = [ <span class="string">&quot;i like dog&quot;</span>, <span class="string">&quot;i love coffee&quot;</span>, <span class="string">&quot;i hate milk&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下两行代码是将上面sentences列表中的单词提取出来</span></span><br><span class="line">word_list = <span class="string">&quot; &quot;</span>.join(sentences).split() <span class="comment"># 每句首先使用空格分割形成一个单词列表</span></span><br><span class="line">word_list = <span class="built_in">list</span>(<span class="built_in">set</span>(word_list)) <span class="comment"># 用一个小技巧，先让list变成set，然后再变回去，这样就提取出了单词列表</span></span><br><span class="line"><span class="comment"># 以下两行是建立单词对应序号的索引字典word_dict和序号对应单词的索引number_dict</span></span><br><span class="line"><span class="comment"># 使用了enumerate函数，使得在遍历的同时可以追踪到序号，i, w是元组，其实可以写成(i, w)</span></span><br><span class="line">word_dict = &#123;w: i <span class="keyword">for</span> i, w <span class="keyword">in</span> <span class="built_in">enumerate</span>(word_list)&#125; <span class="comment"># w: i 单词对应序号键值对</span></span><br><span class="line">number_dict = &#123;i: w <span class="keyword">for</span> i, w <span class="keyword">in</span> <span class="built_in">enumerate</span>(word_list)&#125; <span class="comment"># i: w 序号对应单词键值对</span></span><br><span class="line">n_class = <span class="built_in">len</span>(word_dict) <span class="comment"># number of Vocabulary</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># NNLM Parameter</span></span><br><span class="line">n_step = <span class="number">2</span> <span class="comment"># n-1 in paper 根据前两个单词预测第三个单词</span></span><br><span class="line">n_hidden = <span class="number">2</span> <span class="comment"># h in paper 隐藏层神经元个数</span></span><br><span class="line">m = <span class="number">2</span> <span class="comment"># m in paper 词向量维数</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">model = NNLM() <span class="comment"># 初始化模型</span></span><br><span class="line">model</span><br><span class="line">&gt;&gt; NNLM(</span><br><span class="line">  (C): Embedding(<span class="number">7</span>, <span class="number">2</span>)</span><br><span class="line">  (H): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">2</span>, bias=<span class="literal">False</span>)</span><br><span class="line">  (U): Linear(in_features=<span class="number">2</span>, out_features=<span class="number">7</span>, bias=<span class="literal">False</span>)</span><br><span class="line">  (W): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">7</span>, bias=<span class="literal">False</span>)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 损失函数定义为交叉熵损失函数</span></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"><span class="comment"># 采用Adam优化算法，学习率0.001</span></span><br><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.001</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下三行将输入进行torch包装</span></span><br><span class="line">input_batch, target_batch = make_batch(sentences)</span><br><span class="line">input_batch = torch.LongTensor(input_batch)</span><br><span class="line">target_batch = torch.LongTensor(target_batch)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">input_batch</span><br><span class="line">&gt;&gt; tensor([[<span class="number">6</span>, <span class="number">3</span>],</span><br><span class="line">          [<span class="number">6</span>, <span class="number">0</span>],</span><br><span class="line">          [<span class="number">6</span>, <span class="number">4</span>]])</span><br><span class="line">target_batch</span><br><span class="line">&gt;&gt; tensor([<span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<ul>
+<li>训练</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Training</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5000</span>):</span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    output = model(input_batch)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># output : [batch_size, n_class], target_batch : [batch_size]</span></span><br><span class="line">    loss = criterion(output, target_batch)</span><br><span class="line">    <span class="keyword">if</span> (epoch + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>:   <span class="comment"># 每1000轮查看一次损失函数变化</span></span><br><span class="line">        print(<span class="string">&#x27;Epoch:&#x27;</span>, <span class="string">&#x27;%04d&#x27;</span> % (epoch + <span class="number">1</span>), <span class="string">&#x27;cost =&#x27;</span>, <span class="string">&#x27;&#123;:.6f&#125;&#x27;</span>.<span class="built_in">format</span>(loss))</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 自动求导反向传播，使用step()来更新参数</span></span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; </span><br><span class="line">    Epoch: <span class="number">1000</span> cost = <span class="number">0.218495</span></span><br><span class="line">    Epoch: <span class="number">2000</span> cost = <span class="number">0.017840</span></span><br><span class="line">    Epoch: <span class="number">3000</span> cost = <span class="number">0.004382</span></span><br><span class="line">    Epoch: <span class="number">4000</span> cost = <span class="number">0.001692</span></span><br><span class="line">    Epoch: <span class="number">5000</span> cost = <span class="number">0.000792</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>预测</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Predict 预测值</span></span><br><span class="line">predict = model(input_batch).data.<span class="built_in">max</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)[<span class="number">1</span>]  <span class="comment"># 不加.data也可</span></span><br><span class="line">predict</span><br><span class="line">&gt;&gt; tensor([[<span class="number">2</span>],</span><br><span class="line">           [<span class="number">5</span>],</span><br><span class="line">           [<span class="number">1</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pytorch中的tensor不能作为字典的键：n.item()</span></span><br><span class="line">print([sen.split()[:<span class="number">2</span>] <span class="keyword">for</span> sen <span class="keyword">in</span> sentences], <span class="string">&#x27;-&gt;&#x27;</span>, [number_dict[n.item()] <span class="keyword">for</span> n <span class="keyword">in</span> predict.squeeze()]) </span><br><span class="line">&gt;&gt; </span><br><span class="line">	[[&#x27;i&#x27;, &#x27;like&#x27;], [&#x27;i&#x27;, &#x27;love&#x27;], [&#x27;i&#x27;, &#x27;hate&#x27;]] -&gt; [&#x27;dog&#x27;, &#x27;coffee&#x27;, &#x27;milk&#x27;]</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ul>
+<li>我们所理解的是列向量：[300*1] ,实验中输入参数反过来：[batch_size*n_dim]  (输入维度，输出维度)。<a target="_blank" rel="noopener" href="https://blog.csdn.net/Pit3369/article/details/104513784">参考</a></li>
+</ul>
+<blockquote>
+<ol>
+<li><p>输入层(投影层)：假设词向量维度为m=300，词汇表为|V|<br>投影矩阵 c[300*|V|] X w(t)[|V|*1] = [300*1]。<br>前n-1个词预测后一个词，n=4时，n-1=3，  [300*3] -&gt; 按行拼接得到：[900*1]</p>
+</li>
+<li><p>隐藏层： H=500，[500*900] X [900*1] = [500*1]</p>
+</li>
+<li>输出层：输出为词汇表大小，[|V|*900] X [900*1] = [|V|*1]</li>
+</ol>
+</blockquote>
+<ul>
+<li><p>nn.Embedding(n_class, m)  n_class为词汇表大小，m为词向量维度</p>
+</li>
+<li><p>nn.Embedding自带one_hot过程。输入的是<strong>索引</strong>，不是onehot向量</p>
+</li>
+<li><p>官方文档的描述：input (LongTensor): Tensor containing indices into the embedding matrix。我们输入的input是embedding matrix的索引，而embedding matrix就是设置的参数(n_class, m)</p>
+</li>
+<li><p>有batchsize：输入为[batch_size*indices]。 每一行包括n-1个单词，indices最终会和m相乘（相当于拼接n-1个单词，indices=n_step).indices的数值相当于索引，例如6表示onehot向量的6位置为1…. onehot向量的总长度为n_class。</p>
+</li>
+<li><p>nn.CrossEntropyLoss()中的”reduction”参数，默认为”mean”，即batch_size求平均。</p>
+</li>
+<li><p>模型的输入设置都是参数的维度设置：nn.Linear(in_features, out_features)是参数w的维度；batch_size是一起输入到模型中的（矩阵运算），最终的输入输出都有batch_size<strong>（只要在前面加一个维度就可以了）。</strong></p>
+</li>
+<li><p>不同的损失函数输入和标签是不一样的：nn.CrossEntropyLoss(input,target),input表示前面模型的输出(*,C)，C为类别数；target为数据真实标签(*)一维。而nn.BCELoss()中的input和target要是相同大小，所以一般input.squeeze()变为一维。</p>
+</li>
+<li><p>nn.CrossEntropyLoss （<strong>内置了Softmax</strong>），不要再用F.softmax</p>
+</li>
+<li><p><strong>target不用onehot的原因：</strong></p>
+<ul>
+<li>交叉熵的计算公式为:<script type="math/tex; mode=display">
+cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)</script>其中$p$表示真实值，在这个公式中是one-hot形式；$q$是预测值，在这里假设已经是经过softmax后的结果了。仔细观察可以知道，因为$p$的元素不是0就是1，而且又是乘法，所以很自然地我们如果知道1所对应的index，那么就不用做其他无意义的运算了。所以在pytorch代码中target不是以one-hot形式表示的，而是直接用scalar表示。所以交叉熵的公式(m表示真实类别)可变形为：<script type="math/tex; mode=display">
+cross\_entropy=-\sum_{k=1}^{N}\left(p_{k} * \log q_{k}\right)=-log \, q_m \</script></li>
+</ul>
+</li>
+<li><p>nn.Embedding 举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#一个样本</span></span><br><span class="line">embedding = nn.Embedding(<span class="number">10</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">input</span> = torch.LongTensor([<span class="number">1</span>,<span class="number">2</span>])  </span><br><span class="line">x = embedding(<span class="built_in">input</span>)</span><br><span class="line">x</span><br><span class="line">&gt;&gt; </span><br><span class="line">	tensor([[-<span class="number">0.4956</span>,  <span class="number">0.6100</span>,  <span class="number">0.4423</span>],</span><br><span class="line">        [ <span class="number">0.3449</span>,  <span class="number">0.4357</span>,  <span class="number">0.4091</span>]], grad_fn=&lt;EmbeddingBackward&gt;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.shape</span><br><span class="line">&gt;&gt; torch.Size([<span class="number">2</span>, <span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = x.view(-<span class="number">1</span>, <span class="number">2</span> * <span class="number">3</span>)</span><br><span class="line">x</span><br><span class="line">&gt;&gt; tensor([[-<span class="number">0.4956</span>,  <span class="number">0.6100</span>,  <span class="number">0.4423</span>,  <span class="number">0.3449</span>,  <span class="number">0.4357</span>,  <span class="number">0.4091</span>]],</span><br><span class="line">       grad_fn=&lt;ViewBackward&gt;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.shape</span><br><span class="line">&gt;&gt; torch.Size([<span class="number">1</span>, <span class="number">6</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#两个样本(batch_size)</span></span><br><span class="line">embedding = nn.Embedding(<span class="number">10</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">input</span> = torch.LongTensor([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]]) </span><br><span class="line">x = embedding(<span class="built_in">input</span>)</span><br><span class="line">x</span><br><span class="line">&gt;&gt; </span><br><span class="line">	tensor([[[-<span class="number">0.2093</span>, -<span class="number">0.5482</span>,  <span class="number">0.7783</span>],</span><br><span class="line">         [ <span class="number">0.0090</span>, -<span class="number">0.4064</span>,  <span class="number">0.2775</span>]],</span><br><span class="line"></span><br><span class="line">        [[ <span class="number">0.5635</span>,  <span class="number">0.3594</span>,  <span class="number">1.3762</span>],</span><br><span class="line">         [-<span class="number">0.9911</span>, -<span class="number">0.1209</span>, -<span class="number">1.9970</span>]]], grad_fn=&lt;EmbeddingBackward&gt;)</span><br><span class="line"></span><br><span class="line">x.shape</span><br><span class="line">&gt;&gt; torch.Size([<span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">x = x.view(-<span class="number">1</span>, <span class="number">2</span> * <span class="number">3</span>)</span><br><span class="line">x</span><br><span class="line">&gt;&gt; </span><br><span class="line">	tensor([[-<span class="number">0.2093</span>, -<span class="number">0.5482</span>,  <span class="number">0.7783</span>,  <span class="number">0.0090</span>, -<span class="number">0.4064</span>,  <span class="number">0.2775</span>],</span><br><span class="line">        [ <span class="number">0.5635</span>,  <span class="number">0.3594</span>,  <span class="number">1.3762</span>, -<span class="number">0.9911</span>, -<span class="number">0.1209</span>, -<span class="number">1.9970</span>]],</span><br><span class="line">       grad_fn=&lt;ViewBackward&gt;)</span><br><span class="line"></span><br><span class="line">x.shape   <span class="comment"># 两个样本，每一行进行了拼接</span></span><br><span class="line">&gt;&gt; torch.Size([<span class="number">2</span>, <span class="number">6</span>])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
     </div>
 
     
@@ -290,7 +403,7 @@ pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"
   </li>
   <li class="post-copyright-link">
     <strong>本文链接: </strong>
-    <a href="http://chuony.github.io/posts/50470/" title="Word2vec">http://chuony.github.io/posts/50470/</a>
+    <a href="http://chuony.github.io/posts/50470/" title="Word2vec1">http://chuony.github.io/posts/50470/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -375,7 +488,7 @@ pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word2vec"><span class="nav-text">Word2vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0. 前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-text">统计语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">神经网络模型</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Word2vec%E3%80%91%E8%AF%8D%E5%90%91%E9%87%8F%E5%85%A5%E9%97%A81%E2%80%94%E2%80%94NNLM"><span class="nav-text">【Word2vec】词向量入门1——NNLM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0. 前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-text">统计语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">神经网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B%EF%BC%9ANNLM"><span class="nav-text">举例：NNLM</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -451,12 +564,12 @@ pp(s)=\sqrt[N]{\frac{1}{p(w_1,w_2,...,w_n)}}</script><h4 id="神经网络模型"
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">61k</span>
+    <span title="Symbols count total">69k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">56 mins.</span>
+    <span title="Reading time total">1:02</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
   </div>
