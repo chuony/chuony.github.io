@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134645.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815142641.png">
 <meta property="article:published_time" content="2020-10-26T13:28:21.000Z">
-<meta property="article:modified_time" content="2021-08-15T13:37:43.001Z">
+<meta property="article:modified_time" content="2021-08-16T07:42:06.408Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-15 21:37:43" itemprop="dateModified" datetime="2021-08-15T21:37:43+08:00">2021-08-15</time>
+                <time title="Modified: 2021-08-16 15:42:06" itemprop="dateModified" datetime="2021-08-16T15:42:06+08:00">2021-08-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -244,11 +244,10 @@
         <h3 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h3><p>由谷歌在论文<strong>Efficient Estimation of Word Representations in Vector Space</strong>中提出，解决了原始如前馈神经网络语言模型（NNLM）、RNNLM等其他神经网络语言模型计算量大等问题。Word2vec实现了在大规模语料上快速得到词向量，是NLP领域中一个重要的转折点。</p>
 <span id="more"></span>
 <h3 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h3><ul>
-<li><p>词向量分为：<strong>独热表示（one-hot）与分布式表示</strong>。</p>
-</li>
-<li><p>独热表示由于数据稀疏等一系列问题逐渐被淘汰，取而代之的是分布式表示，即将词的语义分布地存储在各个维度中，将维度进行了压缩也就是词嵌入概念。</p>
+<li>词向量分为：<strong>独热表示（one-hot）与分布式表示</strong>。</li>
+<li><p>独热表示由于数据稀疏等一系列问题逐渐被淘汰，取而代之的是分布式表示，即将词的语义分布地存储在各个维度中，将维度进行了压缩也就是词嵌入概念。   </p>
 <ul>
-<li>对比如图所示：如果要用独热编码来表示一个新的型状，我们就必须增加维数。但是分布式的好处在于可以用现有维度来表示一个新的型状</li>
+<li>对比如图所示：如果要用独热编码来表示一个新的型状，我们就必须增加维数。但是分布式的好处在于可以用现有维度来表示一个新的型状。</li>
 </ul>
 <center class="half">    
     <img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210815134632.png" alt="main-qimg-8c6ee25a0d46a82eee9fb9d38054db48" style="zoom: 80%;" width="300"/>    
@@ -263,10 +262,9 @@
 </ul>
 <script type="math/tex; mode=display">
 p(s)=p(w_1)*p(w_2|w_1)*p(w_3|w_1w_2)*\dots*p(w_m|w_1\dots w_{m-1})
-    =\prod^m_{i=1}p(w_i|w_1...w_{i-1})</script><p>当$i=1$时，$p(w_1|w_0)=p(w_1)$</p>
+    =\prod^m_{i=1}p(w_i|w_1...w_{i-1})</script><p>当$i=1$时，$p(w_1|w_0)=p(w_1)$  </p>
 <blockquote>
-<p>随着历史基元数量的增加，模型中包含指数级别个自由参数。</p>
-<p>n元语法模型（n-gram model）：n=1时，一元文法uni-gram；n=2时，2-gram(bi-gram)被称为1阶马尔科夫链；n=3时，3-gram（tri-gram）被称为2阶马尔科夫链。</p>
+<p>随着历史基元数量的增加，模型中包含指数级别个自由参数。<br>n元语法模型（n-gram model）：n=1时，一元文法uni-gram；n=2时，2-gram(bi-gram)被称为1阶马尔科夫链；n=3时，3-gram（tri-gram）被称为2阶马尔科夫链。</p>
 </blockquote>
 <p><strong>n-gram</strong>：实际上就是n个临近词构成的一个n元词组。</p>
 <blockquote>
