@@ -20,24 +20,25 @@
     var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本篇主要讲解模型的选择与评估。在现实任务中，我们有很多种学习算法可供选择，甚至对同一个学习算法，当选择不同的参数配置时，也会产生不同的模型。">
+  <meta name="description" content="在了解了Seq2seq中的Attention后，相信大家对于Attention的原理和本质有了基本的印象。但我们仍然注意这种结构还是依托于RNN及其变体，并且只能串行计算。2017年，Transformer模型的提出大放异彩（Vaswani,2017,Attention is All You Need），这种模型架构避免循环并完全依赖于注意力机制来绘制输入和输出之间的全局依赖关系，并解决了 RNN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【模型评估】西瓜书第2章">
-<meta property="og:url" content="http://chuony.github.io/posts/12001/index.html">
+<meta property="og:title" content="【Transformer】Attention is All You Need">
+<meta property="og:url" content="http://chuony.github.io/posts/63851/index.html">
 <meta property="og:site_name" content="Chuony&#39; Blog">
-<meta property="og:description" content="本篇主要讲解模型的选择与评估。在现实任务中，我们有很多种学习算法可供选择，甚至对同一个学习算法，当选择不同的参数配置时，也会产生不同的模型。">
+<meta property="og:description" content="在了解了Seq2seq中的Attention后，相信大家对于Attention的原理和本质有了基本的印象。但我们仍然注意这种结构还是依托于RNN及其变体，并且只能串行计算。2017年，Transformer模型的提出大放异彩（Vaswani,2017,Attention is All You Need），这种模型架构避免循环并完全依赖于注意力机制来绘制输入和输出之间的全局依赖关系，并解决了 RNN">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227175123.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227180834.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227181308.png">
-<meta property="article:published_time" content="2021-02-27T09:36:34.000Z">
-<meta property="article:modified_time" content="2021-02-28T11:20:58.686Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818203551.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222150.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222536.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222702.webp">
+<meta property="article:published_time" content="2021-08-18T12:11:27.000Z">
+<meta property="article:modified_time" content="2021-08-18T14:29:12.923Z">
 <meta property="article:author" content="Chuony">
-<meta property="article:tag" content="ML">
+<meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227175123.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818203551.png">
 
-<link rel="canonical" href="http://chuony.github.io/posts/12001/">
+<link rel="canonical" href="http://chuony.github.io/posts/63851/">
 
 
 <script id="page-configurations">
@@ -50,7 +51,7 @@
   };
 </script>
 
-  <title>【模型评估】西瓜书第2章 | Chuony' Blog</title>
+  <title>【Transformer】Attention is All You Need | Chuony' Blog</title>
   
 
 
@@ -167,7 +168,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/12001/">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/63851/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/xi.jpg">
@@ -180,7 +181,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          【模型评估】西瓜书第2章
+          【Transformer】Attention is All You Need
         </h1>
 
         <div class="post-meta">
@@ -189,23 +190,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-02-27 17:36:34" itemprop="dateCreated datePublished" datetime="2021-02-27T17:36:34+08:00">2021-02-27</time>
+              <time title="Created: 2021-08-18 20:11:27 / Modified: 22:29:12" itemprop="dateCreated datePublished" datetime="2021-08-18T20:11:27+08:00">2021-08-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-28 19:20:58" itemprop="dateModified" datetime="2021-02-28T19:20:58+08:00">2021-02-28</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                  <a href="/categories/NLP%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">NLP进阶</span></a>
                 </span>
             </span>
 
@@ -222,14 +217,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.6k</span>
+              <span>2.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>3 mins.</span>
             </span>
 
         </div>
@@ -241,60 +236,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本篇主要讲解模型的选择与评估。在现实任务中，我们有很多种学习算法可供选择，甚至对同一个学习算法，当选择不同的参数配置时，也会产生不同的模型。</p>
-<span id="more"></span>
-<h3 id="经验误差与过拟合"><a href="#经验误差与过拟合" class="headerlink" title="经验误差与过拟合"></a>经验误差与过拟合</h3><ul>
-<li><p>经验误差：学习器在训练集上的误差，也叫训练误差</p>
-</li>
-<li><p>泛化误差：在新样本上的误差</p>
-</li>
-<li><p>过拟合与欠拟合</p>
-</li>
-</ul>
-<h3 id="评估方法"><a href="#评估方法" class="headerlink" title="评估方法"></a>评估方法</h3><ul>
-<li><p>留出法：直接将数据集分为两个互斥的集合。保留类别比例的采样方式称为“分层采样”。</p>
-</li>
-<li><p>交叉验证法：k折交叉验证；“10次10折交叉验证”：与100次留出法都是进行100次。</p>
-</li>
-<li><p>自助法：有放回的采样。</p>
-</li>
-<li><p>调参与最终模型：由于需要一部分数据进行评估测试，事实上我们只使用了一部分数据训练模型。因此，在模型选择完成后，学习算法和参数配置已选定，此时应该用所有数据集重新训练模型。</p>
-<p>验证集：调参和模型选择</p>
-<p>测试集：泛化能力</p>
-</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227175123.png" alt="image-20210227175123753" style="zoom:80%;" /></p>
+        <p>在了解了<a href="https://chuony.github.io/posts/44996/">Seq2seq中的Attention</a>后，相信大家对于Attention的原理和本质有了基本的印象。但我们仍然注意这种结构还是依托于RNN及其变体，并且只能串行计算。2017年，Transformer模型的提出大放异彩（<em>Vaswani,2017,Attention is All You Need</em>），这种模型架构避免循环并完全依赖于注意力机制来绘制输入和输出之间的全局依赖关系，并解决了 RNN 模型不能并行计算 的问题，训练的时间也显著减少。本篇博客基于<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">learn-nlp-with-transformers</a></p>
+<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 依然遵循 Encoder-Decoder 架构，下图中左边部分为编码器结构，右边为解码器结构。<strong>编码和解码都由多层构成（论文中是6层，层数并不固定），每层在各自的编码和解码部分结构上都是一样的，但不同层的权重参数是不同的。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818203551.png" alt="image-20210818203544077"></p>
+<p><strong>编码器</strong>：</p>
 <ul>
-<li>代码：<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/cross_validation.html">https://scikit-learn.org/stable/modules/cross_validation.html</a></li>
+<li>编码器由N=6个完全相同的层堆叠而成。</li>
+<li>每一层都包括两个子层：1. Multi-head self-attention layer；2. Feed forward neural metwork.</li>
+<li>对每个子层采用残差连接和层标准化。</li>
 </ul>
-<p>计算交叉验证的指标：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span><br><span class="line"><span class="comment"># cross_val_score 指定参数来设定评测标准；</span></span><br><span class="line"><span class="comment"># 当cv 指定为int 类型时，默认使用KFold 或StratifiedKFold 进行数据集打乱</span></span><br><span class="line">clf = svm.SVC(kernel=<span class="string">&#x27;linear&#x27;</span>, C=<span class="number">1</span>, random_state=<span class="number">42</span>)</span><br><span class="line">scores = cross_val_score(clf, X, y, cv=<span class="number">5</span>)</span><br><span class="line">scores</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>array([<span class="number">0.96</span>..., <span class="number">1.</span> , <span class="number">0.96</span>..., <span class="number">0.96</span>..., <span class="number">1.</span> ])</span><br><span class="line">scores.mean()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">0.98</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 也可以通过传递交叉验证迭代器来使用其他交叉验证策略</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> ShuffleSplit</span><br><span class="line">n_samples = X.shape[<span class="number">0</span>]</span><br><span class="line">cv = ShuffleSplit(n_splits=<span class="number">5</span>, test_size=<span class="number">0.3</span>, random_state=<span class="number">0</span>)</span><br><span class="line">cross_val_score(clf, X, y, cv=cv)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>array([<span class="number">0.977</span>..., <span class="number">0.977</span>..., <span class="number">1.</span>  ..., <span class="number">0.955</span>..., <span class="number">1.</span>        ])</span><br></pre></td></tr></table></figure>
-<p>交叉验证迭代器：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># KFold</span></span><br><span class="line"><span class="comment"># K折交叉验证，这是将数据集分成K份的官方给定方案，所谓K折就是将数据集通过K次分割，每次分割中不会有重叠。相当于无放回抽样。</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> KFold</span><br><span class="line">X = [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>]</span><br><span class="line">kf = KFold(n_splits=<span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> train, test <span class="keyword">in</span> kf.split(X):</span><br><span class="line">    print(<span class="string">&quot;%s %s&quot;</span> % (train, test)) <span class="comment"># 打印索引值</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line">	[<span class="number">2</span> <span class="number">3</span>] [<span class="number">0</span> <span class="number">1</span>]</span><br><span class="line">	[<span class="number">0</span> <span class="number">1</span>] [<span class="number">2</span> <span class="number">3</span>]</span><br><span class="line"><span class="comment"># 可以使用numpy索引创建训练/测试集</span></span><br><span class="line"><span class="built_in">print</span> np.array(X)[train], np.array(X)[test] <span class="comment"># 打印具体的样本</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># StratifiedKFold是k倍的变化形式，它返回分层的 倍数：每个集合所包含的每个目标类别的样本所占的百分比与整个集合所占的百分比大致相同。</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> StratifiedKFold</span><br></pre></td></tr></table></figure>
-<p>如何选择参数？——通过循环不断改变参数，再利用交叉验证来评估不同参数模型的能力。最终选择能力最优的模型：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split,cross_val_score</span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier <span class="comment">#KNN 只有K一个参数</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line">train_X,test_X,train_y,test_y = train_test_split(X,y,test_size=<span class="number">1</span>/<span class="number">3</span>,random_state=<span class="number">3</span>) </span><br><span class="line">k_range = <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">31</span>)</span><br><span class="line">cv_scores = [] <span class="comment">#用来放每个模型的结果值</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> k_range:</span><br><span class="line">	knn = KNeighborsClassifier(n) </span><br><span class="line"> <span class="comment">#knn模型，这里一个超参数可以做预测，当多个超参数时需要使用另一种方法GridSearchCV</span></span><br><span class="line">	scores = cross_val_score(knn,train_X,train_y,cv=<span class="number">10</span>,scoring=<span class="string">&#x27;accuracy&#x27;</span>) <span class="comment">#cv：选择每次测试折数 accuracy：评价指标是准确度,可以省略使用默认值，具体使用参考下面。</span></span><br><span class="line">	cv_scores.append(scores.mean())</span><br><span class="line">plt.plot(k_range,cv_scores)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;K&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>) <span class="comment">#通过图像选择最好的参数</span></span><br><span class="line">plt.show()</span><br><span class="line">best_knn = KNeighborsClassifier(n_neighbors=<span class="number">3</span>) <span class="comment">#选择最优的K=3传入模型</span></span><br><span class="line">best_knn.fit(train_X,train_y) <span class="comment">#训练模型</span></span><br><span class="line">print(best_knn.score(test_X,test_y)) <span class="comment">#看看评分</span></span><br></pre></td></tr></table></figure>
-<h3 id="性能度量"><a href="#性能度量" class="headerlink" title="性能度量"></a>性能度量</h3><ul>
-<li><p>精确率。召回率、混淆矩阵、F值</p>
-</li>
-<li><p>ROC与AUC</p>
-</li>
-</ul>
-<h3 id="方差与偏差"><a href="#方差与偏差" class="headerlink" title="方差与偏差"></a>方差与偏差</h3><ul>
-<li>机器学习模型：</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227180834.png" alt="image-20210227180834612"></p>
-<p>​    拉姆达为正则化参数。越小模型的复杂度越高。</p>
+<p><strong>解码器</strong>：</p>
 <ul>
-<li><p>偏差-方差分解：解释模型的泛化性能</p>
-<p>𝑒𝑥𝑝𝑒𝑐𝑡𝑒𝑑 𝑙𝑜𝑠𝑠 = 𝑏𝑖𝑎𝑠^2+𝑣𝑎𝑟𝑖𝑎𝑛𝑐𝑒+𝑛𝑜𝑖𝑠𝑒</p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210227181308.png" alt="image-20210227181307909"></p>
-<p>拉姆达大：低方差；简单模型；高偏差</p>
-<p>拉姆达小：高方差；复杂模型；低偏差</p>
-<p>偏差-方差无法计算，因为它依赖于x和y的真实性分布。</p>
-</li>
+<li>解码器由N=6个完全相同的层堆叠而成。</li>
+<li>每一层都包括三个子层：1. Multi-head self-attention layer；2. Feed forward neural metwork；3. Encoder-decoder的Multi-head attention.</li>
+<li>对每个子层采用残差连接和层标准化。</li>
+<li>解码器中的Multi-head self-attention layer是Masked，防止关注到后面的位置。</li>
 </ul>
+<h2 id="Self-attention"><a href="#Self-attention" class="headerlink" title="Self-attention"></a>Self-attention</h2><p>与seq2seq中的attention原理是一样的，我们<strong>对于每一个输入的token都要得到一个上下文语义向量，这个向量不仅由当前token位置词的信息，还融合了句子中其他位置的词的信息</strong>。类比于RNN：RNN 在处理一个词时，会考虑前面传过来的<em>hidden state</em>，而<em>hidden state</em>就包含了前面的词的信息。而Transformer使用<em>Self Attention</em>机制，会把其他单词的理解融入处理当前的单词。</p>
+<p><strong>具体计算步骤</strong>：</p>
+<ol>
+<li>对输入编码器的每个词向量，都创建 3 个向量，分别是：Query 向量，Key 向量，Value 向量。这 3 个向量是词向量分别和 3 个矩阵相乘得到的，而这个矩阵是我们要学习的参数。（<strong>这 3 个新得到的向量一般比原来的词向量的长度更小，假设这 3 个向量的长度是$d_{k}$</strong>）</li>
+<li>计算 Attention Score（注意力分数）。这些分数是当前token所对应的Query 向量和其他位置的每个token的 Key 向量的点积，最终得到总共有句子长度个分数：第一个分数就是 q1 和 k1 的内积，第二个分数就是 q1 和 k2 的点积。（<strong>这里利用点积，没有利用其他矩阵参数</strong>）</li>
+<li>把每个分数除以 $\sqrt{d_{k}}$ 。也可以除以其他数，除以一个数是为了在反向传播时，求取梯度更加稳定。</li>
+<li>把这些分数经过一个 Softmax 层，将分数归一化。（<strong>这些分数决定了在编码当前位置的词时，对所有位置的词分别有多少的注意力</strong>）</li>
+<li>得到每个位置的分数后，将每个分数分别与每个 Value 向量相乘。这种做法背后的直觉理解就是：对于分数高的位置，相乘后的值就越大，我们把更多的注意力放到了它们身上；相反则这些位置的词可能是相关性不大的，这样我们就忽略了这些位置的词。</li>
+<li>把上一步得到的向量相加，就得到了 Self Attention 层在这个位置的输出。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222150.png" alt="2-sum"></p>
+<p><strong>最终得到的当前位置的向量会输入到前馈神经网络，而前馈神经网络的输出会作为下一层的输入。</strong></p>
+<p>上面的计算步骤每次只能计算一个位置的输出向量，在实际的代码实现中，Self Attention 的计算过程是使用矩阵来实现的，这样可以加速计算，一次就得到所有位置的输出向量。</p>
+<p><strong>矩阵计算步骤：</strong></p>
+<ol>
+<li>把所有词向量放到一个矩阵 X 中，然后分别和3 个权重矩阵$W^Q, W^K, W^V$ 相乘，得到 Q，K，V 矩阵。</li>
+<li>使用矩阵可以把上面的第 2 步到第 6 步压缩为一步，直接得到 Self Attention 的输出。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222536.png" alt="image-20210818222536262"></p>
+<h2 id="Multi-head-attention"><a href="#Multi-head-attention" class="headerlink" title="Multi-head attention"></a>Multi-head attention</h2><p>多头注意力机制（multi-head attention）进一步完善了 Self Attention 层，类似于CNN中的卷积核对于特征的多方面提取，每一部分只关注一个特征。</p>
+<p>多头注意力机制赋予 attention 层多个“子表示空间”，它扩展了模型关注不同位置的能力。论文中采用了8组注意力（也就是8组QKV的权重矩阵）。每一组注意力的权重矩阵都是随机初始化的。</p>
+<p>具体计算步骤：</p>
+<ol>
+<li>每组注意力具有单独的 $W^Q, W^K, W^V$ 权重矩阵。将输入 X 和每组注意力的$W^Q, W^K, W^V$  相乘，得到 8 组 Q, K, V 矩阵。</li>
+<li>通过self-attention的计算得到每组的Z矩阵，最终得到8个Z矩阵。</li>
+<li>把这8个Z矩阵拼接起来，然后和另一个权重矩阵$W^O$相乘，得到最终的矩阵Z，这个矩阵包含了所有 attention heads（注意力头） 的信息。这个矩阵会输入到 FFNN。<strong>因为FFNN接收的是 1 个矩阵（其中每行的向量表示一个词），而不是 8 个矩阵。</strong></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222702.webp" alt="2-put-together"></p>
+<h2 id="Positional-encoding"><a href="#Positional-encoding" class="headerlink" title="Positional encoding"></a>Positional encoding</h2><p>我们都知道语言是有顺序的，而这种并行计算没有表示序列中单词的顺序。为了解决这个问题，Transformer 模型对每个输入的向量都添加了一个向量。这些向量遵循模型学习到的特定模式，有助于确定每个单词的位置，或者句子中不同单词之间的距离。<strong>这种做法背后的直觉是：将这些表示位置的向量添加到词向量中，得到了新的向量，这些新向量映射到 Q/K/V，然后计算点积得到 attention 时，可以提供有意义的信息。</strong></p>
+<h2 id="Layer-normalization"><a href="#Layer-normalization" class="headerlink" title="Layer normalization"></a>Layer normalization</h2><p>与层标准化（LN）相对应的是batch normalization。BN顾名思义就是对一个batch进行操作，例如每一行数据有三个特征，BN是针对每一列（特征）进行缩放。而LN正好相反，它针对的是每一行进行缩放。</p>
+<p>然而我们会看出LN好像没什么道理？<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/74516930">https://zhuanlan.zhihu.com/p/74516930</a></p>
+<h2 id="Mask"><a href="#Mask" class="headerlink" title="Mask"></a>Mask</h2><ul>
+<li>Sequence Mask：为了防止decoder时看到未来信息；只允许关注到输出序列中早于当前位置之前的单词。具体做法是：在 Self-Attention 分数经过 Softmax 层之前，屏蔽当前位置之后的那些位置。</li>
+<li>Padding Mask： pad为0的值。</li>
+</ul>
+<h2 id="Encoder-decoder-attention"><a href="#Encoder-decoder-attention" class="headerlink" title="Encoder-decoder attention"></a>Encoder-decoder attention</h2><p>第一个编码器的输入是一个序列，最后一个编码器输出是一组注意力向量 K 和 V。这些注意力向量将会输入到每个解码器的Encoder-Decoder Attention层，这有助于解码器把注意力集中在输入序列的合适位置。</p>
+<p>Encoder-decoder attention使得关注输入序列的信息：Q来自于decoder；K和V来自于encoder。即decoder前一层的输出来构造 Query 矩阵，而 Key 矩阵和 Value 矩阵来自于编码器最终的输出。</p>
 
     </div>
 
@@ -310,7 +304,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接: </strong>
-    <a href="http://chuony.github.io/posts/12001/" title="【模型评估】西瓜书第2章">http://chuony.github.io/posts/12001/</a>
+    <a href="http://chuony.github.io/posts/63851/" title="【Transformer】Attention is All You Need">http://chuony.github.io/posts/63851/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -321,7 +315,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>
+              <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i>
           </div>
 
         
@@ -330,13 +324,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/posts/22354/" rel="prev" title="【NN】西瓜书第5章">
-      <i class="fa fa-chevron-left"></i> 【NN】西瓜书第5章
+    <a href="/posts/44996/" rel="prev" title="Seq2seq中的Attention">
+      <i class="fa fa-chevron-left"></i> Seq2seq中的Attention
     </a></div>
-      <div class="post-nav-item">
-    <a href="/posts/23011/" rel="next" title="特征降维与选择、特征缩放">
-      特征降维与选择、特征缩放 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -395,7 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E8%AF%AF%E5%B7%AE%E4%B8%8E%E8%BF%87%E6%8B%9F%E5%90%88"><span class="nav-text">经验误差与过拟合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="nav-text">评估方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%BA%A6%E9%87%8F"><span class="nav-text">性能度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE%E4%B8%8E%E5%81%8F%E5%B7%AE"><span class="nav-text">方差与偏差</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer"><span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-attention"><span class="nav-text">Self-attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-head-attention"><span class="nav-text">Multi-head attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Positional-encoding"><span class="nav-text">Positional encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Layer-normalization"><span class="nav-text">Layer normalization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mask"><span class="nav-text">Mask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder-decoder-attention"><span class="nav-text">Encoder-decoder attention</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

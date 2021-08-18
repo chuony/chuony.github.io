@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817212834.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818165539.png">
 <meta property="article:published_time" content="2021-08-17T11:04:14.000Z">
-<meta property="article:modified_time" content="2021-08-18T10:18:48.664Z">
+<meta property="article:modified_time" content="2021-08-18T13:05:49.835Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-18 18:18:48" itemprop="dateModified" datetime="2021-08-18T18:18:48+08:00">2021-08-18</time>
+                <time title="Modified: 2021-08-18 21:05:49" itemprop="dateModified" datetime="2021-08-18T21:05:49+08:00">2021-08-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -222,7 +222,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.2k</span>
+              <span>3.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -285,6 +285,7 @@ P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a hr
 <li>在下一个时间步重复1-6步骤。</li>
 </ol>
 <p><strong>上面的步骤其实是测试的过程，训练的时候要将对seq_length都求完才能送进最后的前馈神经网络中（一般是一个线性层），这样减少复杂度，尽量不用循环。</strong></p>
+<p>对于机器翻译任务，注意力模型不是无意识地把输出的第一个单词对应到输入的第一个单词。实际上，它从训练阶段学习到了如何在两种语言中对应单词的关系。</p>
 <h3 id="公式说明"><a href="#公式说明" class="headerlink" title="公式说明"></a>公式说明</h3><p>对于上述步骤可以在论文中找到具体公式，模型架构最终输出的条件概率是：</p>
 <script type="math/tex; mode=display">
 p(y_i|y_1,...y_{i-1},x)=g(y_{i-1},s_i,c_i)\\
@@ -300,7 +301,7 @@ e_{ij}=a(s_{i-1},h_j)</script><ul>
 </ul>
 <script type="math/tex; mode=display">
 a(s_{i-1},h_j)=v_a^Ttanh(W_as_{i-1}+U_ah_j)\\
-where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里用了两个参数矩阵，由于$s_{i-1}$来自decoder的隐层，decoder是单向的RNN，而$h_j$来自encoder的隐层是双向的RNN。还有的网络设计形式是将这两个向量在最后的维度concat，利用一个参数矩阵。<strong>代码实现上，encoder的隐层全拿出来，有seq_length的维度，而decoder的隐层$s_{i-1}$没有seq_length这个维度，只是一个时间步的隐层，因此要复制seq_length维度最终进行矩阵运算。（代码实现上都要用到矩阵运算，因此维度要计算清楚）</strong></p>
+where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里用了两个参数矩阵，由于$s_{i-1}$来自decoder的隐层，decoder是单向的RNN，而$h_j$来自encoder的隐层是双向的RNN。还有的网络设计形式是将这两个向量在最后的维度concat，利用一个参数矩阵。<strong>代码实现上，encoder的隐层全拿出来，有seq_length的维度，而decoder的隐层$s_{i-1}$没有seq_length这个维度，只是一个时间步的隐层，因此要复制seq_length维度最终进行矩阵运算。（代码实现上都要用到矩阵运算，因此维度要计算清楚）</strong>。最终得到的上下文向量是跟encoder的隐层维度一样大小的向量，只不过没有了seq_length维度（加权求和了）。</p>
 <p>另外在这里并没有说明Q、K、V，即query、key和value。而在后面提到的Transformer中要经常提到这三个向量，其实原理都一样，只不过计算的方式不同，只要明确了QKV，就能理解attention的计算过程了。这里在做一个补充，对于上面attention的计算得到向量的过程通过这三个向量再描述一遍：</p>
 <blockquote>
 <p>Q：指decoder的隐层$s_{i-1}$；K和V：指encoder的隐层$h$。（K和V一般是一样的）<br>Q和K通过函数（一般是全连接层）再经过softmax得到分数，分数再与V对应相乘（加权求和）得到针对当前Q的上下文语义向量。</p>
@@ -344,7 +345,10 @@ where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里�
     <a href="/posts/23534/" rel="prev" title="【Word2vec】词向量入门2">
       <i class="fa fa-chevron-left"></i> 【Word2vec】词向量入门2
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/posts/63851/" rel="next" title="【Transformer】Attention is All You Need">
+      【Transformer】Attention is All You Need <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -419,7 +423,7 @@ where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -479,12 +483,12 @@ where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">73k</span>
+    <span title="Symbols count total">76k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:07</span>
+    <span title="Reading time total">1:09</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
