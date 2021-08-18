@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817212834.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818165539.png">
 <meta property="article:published_time" content="2021-08-17T11:04:14.000Z">
-<meta property="article:modified_time" content="2021-08-18T10:13:24.040Z">
+<meta property="article:modified_time" content="2021-08-18T10:18:48.664Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-18 18:13:24" itemprop="dateModified" datetime="2021-08-18T18:13:24+08:00">2021-08-18</time>
+                <time title="Modified: 2021-08-18 18:18:48" itemprop="dateModified" datetime="2021-08-18T18:18:48+08:00">2021-08-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,7 +264,7 @@ P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a hr
 </ul>
 <h2 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h2><p>太多的输入信息都要编码为一个固定的中间语义向量$c$，模型的性能会随着输入序列的增加而下降。因此注意力（Attention）机制呼之欲出，极大提高机器翻译的质量。注意力使得模型可以根据需要，关注到输入序列的相关部分。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818165539.png" alt="image-20210818165437661"></p>
-<h3 id="概览：注意力机制文字描述"><a href="#概览：注意力机制文字描述" class="headerlink" title="概览：注意力机制文字描述"></a>概览：注意力机制文字描述</h3><p><strong>一个注意力模型不同于经典的序列到序列（seq2seq）模型，主要体现在 2 个方面</strong>：</p>
+<h3 id="文字描述"><a href="#文字描述" class="headerlink" title="文字描述"></a>文字描述</h3><p><strong>一个注意力模型不同于经典的序列到序列（seq2seq）模型，主要体现在 2 个方面</strong>：</p>
 <ul>
 <li>编码器会把更多的数据传递给解码器。编码器把所有时间步的 hidden state（隐藏层状态）传递给解码器，而不是只传递最后一个 hidden state（隐藏层状态）。</li>
 <li>注意力模型的解码器在产生输出之前，做了一个额外的处理。为了把注意力集中在与该时间步相关的输入部分。解码器做了如下的处理：<ol>
@@ -285,7 +285,7 @@ P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a hr
 <li>在下一个时间步重复1-6步骤。</li>
 </ol>
 <p><strong>上面的步骤其实是测试的过程，训练的时候要将对seq_length都求完才能送进最后的前馈神经网络中（一般是一个线性层），这样减少复杂度，尽量不用循环。</strong></p>
-<h3 id="公式具体说明"><a href="#公式具体说明" class="headerlink" title="公式具体说明"></a>公式具体说明</h3><p>对于上述步骤可以在论文中找到具体公式，模型架构最终输出的条件概率是：</p>
+<h3 id="公式说明"><a href="#公式说明" class="headerlink" title="公式说明"></a>公式说明</h3><p>对于上述步骤可以在论文中找到具体公式，模型架构最终输出的条件概率是：</p>
 <script type="math/tex; mode=display">
 p(y_i|y_1,...y_{i-1},x)=g(y_{i-1},s_i,c_i)\\
 s_i=f(s_{i-1},y_{i-1},c_i)</script><ul>
@@ -303,8 +303,7 @@ a(s_{i-1},h_j)=v_a^Ttanh(W_as_{i-1}+U_ah_j)\\
 where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里用了两个参数矩阵，由于$s_{i-1}$来自decoder的隐层，decoder是单向的RNN，而$h_j$来自encoder的隐层是双向的RNN。还有的网络设计形式是将这两个向量在最后的维度concat，利用一个参数矩阵。<strong>代码实现上，encoder的隐层全拿出来，有seq_length的维度，而decoder的隐层$s_{i-1}$没有seq_length这个维度，只是一个时间步的隐层，因此要复制seq_length维度最终进行矩阵运算。（代码实现上都要用到矩阵运算，因此维度要计算清楚）</strong></p>
 <p>另外在这里并没有说明Q、K、V，即query、key和value。而在后面提到的Transformer中要经常提到这三个向量，其实原理都一样，只不过计算的方式不同，只要明确了QKV，就能理解attention的计算过程了。这里在做一个补充，对于上面attention的计算得到向量的过程通过这三个向量再描述一遍：</p>
 <blockquote>
-<p>Q：指decoder的隐层$s_{i-1}$；K和V：指encoder的隐层$h$。（K和V一般是一样的）</p>
-<p>Q和K通过函数（一般是全连接层）再经过softmax得到分数，分数再与V对应相乘（加权求和）得到针对当前Q的上下文语义向量。</p>
+<p>Q：指decoder的隐层$s_{i-1}$；K和V：指encoder的隐层$h$。（K和V一般是一样的）<br>Q和K通过函数（一般是全连接层）再经过softmax得到分数，分数再与V对应相乘（加权求和）得到针对当前Q的上下文语义向量。</p>
 </blockquote>
 <p><strong>分数也就是attention会通过神经网络自动训练、自动选择，只要给定loss，这也是端到端模型的一个优势。</strong></p>
 
@@ -404,7 +403,7 @@ where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder-decoder"><span class="nav-text">Encoder-decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Seq2seq"><span class="nav-text">Seq2seq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention"><span class="nav-text">Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%A7%88%EF%BC%9A%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%96%87%E5%AD%97%E6%8F%8F%E8%BF%B0"><span class="nav-text">概览：注意力机制文字描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E5%85%B7%E4%BD%93%E8%AF%B4%E6%98%8E"><span class="nav-text">公式具体说明</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder-decoder"><span class="nav-text">Encoder-decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Seq2seq"><span class="nav-text">Seq2seq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention"><span class="nav-text">Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E5%AD%97%E6%8F%8F%E8%BF%B0"><span class="nav-text">文字描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%AF%B4%E6%98%8E"><span class="nav-text">公式说明</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
