@@ -29,9 +29,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817211301.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817212834.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817215049.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818165539.png">
 <meta property="article:published_time" content="2021-08-17T11:04:14.000Z">
-<meta property="article:modified_time" content="2021-08-17T14:02:14.040Z">
+<meta property="article:modified_time" content="2021-08-18T10:13:24.040Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -189,10 +189,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-08-17 19:04:14 / Modified: 22:02:14" itemprop="dateCreated datePublished" datetime="2021-08-17T19:04:14+08:00">2021-08-17</time>
+              <time title="Created: 2021-08-17 19:04:14" itemprop="dateCreated datePublished" datetime="2021-08-17T19:04:14+08:00">2021-08-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-18 18:13:24" itemprop="dateModified" datetime="2021-08-18T18:13:24+08:00">2021-08-18</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -216,14 +222,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.3k</span>
+              <span>3.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>3 mins.</span>
             </span>
 
         </div>
@@ -237,20 +243,18 @@
       
         <p>对于NLP领域，相信大家对于Seq2seq模型并不陌生。Seq2seq模型常用于生成任务中，但其实大多数任务都可转为该模型，<strong>万物皆可Seq2seq</strong>！最一开始先提出的是<strong>Encoder-decoder</strong>模型（<em>Cho,2014,Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation</em>），简化后提出<strong>Seq2seq</strong>模型（<em>Sutskever,2014,Sequence to Sequence Learning with Neural Networks</em>），而对于长距离依赖问题，一个固定长度的向量存在很多问题。随后提出的Attention大放异彩（<em>Cho,2016,Neural Machine Translation by Jointly Learning to Align and Translate</em>）。本文从这三篇论文入手，探索Attention的前世今生。</p>
 <span id="more"></span>
-<h2 id="Encoder-decoder"><a href="#Encoder-decoder" class="headerlink" title="Encoder-decoder"></a>Encoder-decoder</h2><p>循环神经网络RNN及其变体可以用来处理时序问题，但都考虑的是输入输出序列等长的问题，然而在实际任务中却存在大量输入输出序列不等的情况。因此这种Encoder-decoder架构被提出，它由两个 RNN （或LSTM）构成，一个 RNN 即编码器将可变长度的源序列映射到一个固定长度的向量（<strong>其实就是最有一个时间步的隐层</strong>），另一个 RNN 即解码器将该向量映射回可变长度的目标序列。该模型的提出原本是解决机器翻译任务。模型结构如下图所示。</p>
+<h2 id="Encoder-decoder"><a href="#Encoder-decoder" class="headerlink" title="Encoder-decoder"></a>Encoder-decoder</h2><p>循环神经网络RNN及其变体可以用来处理时序问题，但都考虑的是输入输出序列等长的问题，然而在实际任务中却存在大量输入输出序列不等的情况。因此这种Encoder-decoder架构被提出，它由两个 RNN （或LSTM）构成，一个 RNN 即编码器将可变长度的源序列映射到一个固定长度的向量（<strong>其实就是最后一个时间步的隐层</strong>），另一个 RNN 即解码器将该向量映射回可变长度的目标序列。该模型的提出原本是解决机器翻译任务。模型结构如下图所示。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817211301.png" alt="image-20210817211301276" style="zoom:80%;" /></p>
-<p>从图中可以看出中间向量（也叫上下文向量）在解码时作用了多次，不仅作为下一时间步的输入也作用与输出，公式如下。</p>
+<p>从图中可以看出中间向量$c$（也叫上下文向量<strong>context</strong>）在解码时作用了多次，不仅作为下一时间步的输入也作用与输出，公式如下。</p>
 <script type="math/tex; mode=display">
 h_t=f(h_{t},y_{t-1},c)</script><script type="math/tex; mode=display">
-P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a href="#Seq2seq" class="headerlink" title="Seq2seq"></a>Seq2seq</h2><p>Seq2seq模型与Encoder-decoder模型的思想基本一致。唯一的区别是encoder的输出也就是中间向量，只作用了一次。</p>
+P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a href="#Seq2seq" class="headerlink" title="Seq2seq"></a>Seq2seq</h2><p>Seq2seq模型与Encoder-decoder模型的思想基本一致。<strong>唯一的区别是encoder的输出也就是中间向量，只作用了一次，并且上一时间步的输出$y_{t-1}$也没有在分类预测时应用</strong>。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817212834.png" alt="image-20210817212834088"></p>
-<p>RNN（LSTM）在每个时间步接受两个输入：(上面的Encoder-decoder模型是将序列元素与上下文向量concat一起作为一个输入)  </p>
+<p>RNN（LSTM）在每个时间步接受两个输入：(上面的Encoder-decoder模型是将序列元素与上下文向量concat一起作为一个输入) </p>
 <ul>
 <li>输入序列的一个元素</li>
 <li>一个hidden state(LSTM还需要一个Cell)</li>
 </ul>
-<p>可以从一个动图来看，在时间上展开，RNN （LSTM）会根据当前时间步的输入，和前一个时间步的 hidden state（隐藏层状态），更新当前时间步的 hidden state（隐藏层状态），编码和解码都是如此。动图来源于：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">learn-nlp-with-transformers</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210817215049.gif" alt="1-6-seq2seq-decoder"></p>
 <p><strong>Trick</strong>:</p>
 <p>论文中还采用了一下小Trick。</p>
 <ul>
@@ -258,6 +262,51 @@ P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a hr
 <li>源序列逆序：对源句子倒序输入能够大大提高翻译的效果，因为这样可以缩短一些词从源语言到目标语言的依赖长度。（前面的单词依赖更短翻译的更好，虽然后面的依赖变长但前面翻译好了后面才能翻译好）</li>
 <li>Beam-search（束搜索）: 一种启发式搜索算法。维特比算法计算量太大，贪婪算法也有可能找到但不准。每个时间步找一个最好的B个选择。</li>
 </ul>
+<h2 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h2><p>太多的输入信息都要编码为一个固定的中间语义向量$c$，模型的性能会随着输入序列的增加而下降。因此注意力（Attention）机制呼之欲出，极大提高机器翻译的质量。注意力使得模型可以根据需要，关注到输入序列的相关部分。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818165539.png" alt="image-20210818165437661"></p>
+<h3 id="概览：注意力机制文字描述"><a href="#概览：注意力机制文字描述" class="headerlink" title="概览：注意力机制文字描述"></a>概览：注意力机制文字描述</h3><p><strong>一个注意力模型不同于经典的序列到序列（seq2seq）模型，主要体现在 2 个方面</strong>：</p>
+<ul>
+<li>编码器会把更多的数据传递给解码器。编码器把所有时间步的 hidden state（隐藏层状态）传递给解码器，而不是只传递最后一个 hidden state（隐藏层状态）。</li>
+<li>注意力模型的解码器在产生输出之前，做了一个额外的处理。为了把注意力集中在与该时间步相关的输入部分。解码器做了如下的处理：<ol>
+<li>查看所有接收到的编码器的 hidden state（隐藏层状态）。其中，编码器中每个 hidden state（隐藏层状态）都对应到输入句子中一个单词。</li>
+<li>给每个 hidden state（隐藏层状态）一个分数（我们先忽略这个分数的计算过程）。</li>
+<li>将每个 hidden state（隐藏层状态）乘以经过 softmax 的对应的分数，从而，高分对应的 hidden state（隐藏层状态）会被放大，而低分对应的 hidden state（隐藏层状态）会被缩小。</li>
+</ol>
+</li>
+</ul>
+<p><strong>这个加权平均的步骤是在解码器的每个时间步做的。来看看注意力模型的整个过程</strong>：</p>
+<ol>
+<li>注意力模型的解码器 RNN 的输入包括：一个embedding 向量，和一个初始化好的解码器 hidden state（隐藏层状态）。</li>
+<li>RNN 处理上述的 2 个输入，产生一个输出和一个新的 hidden state（隐藏层状态 h4 向量），其中输出会被忽略。</li>
+<li>注意力的步骤：我们使用编码器的 hidden state（隐藏层状态）和 h4 向量来计算这个时间步的上下文向量（C4）。</li>
+<li>我们把 h4 和 C4 拼接起来，得到一个向量。</li>
+<li>我们把这个向量输入一个前馈神经网络（这个网络是和整个模型一起训练的）。</li>
+<li>前馈神经网络的输出表示这个时间步输出的单词。</li>
+<li>在下一个时间步重复1-6步骤。</li>
+</ol>
+<p><strong>上面的步骤其实是测试的过程，训练的时候要将对seq_length都求完才能送进最后的前馈神经网络中（一般是一个线性层），这样减少复杂度，尽量不用循环。</strong></p>
+<h3 id="公式具体说明"><a href="#公式具体说明" class="headerlink" title="公式具体说明"></a>公式具体说明</h3><p>对于上述步骤可以在论文中找到具体公式，模型架构最终输出的条件概率是：</p>
+<script type="math/tex; mode=display">
+p(y_i|y_1,...y_{i-1},x)=g(y_{i-1},s_i,c_i)\\
+s_i=f(s_{i-1},y_{i-1},c_i)</script><ul>
+<li>注意这里最终预测输出不是只运用了隐层$s_i$，还加入了上一时间步的输出$y_{i-1}$和上下文向量$c_i$。（对比encoder-decoder模型以及seq2seq模型）。<strong>而在上面提到注意力模型的整个过程中的第4步：h4和C4concat，与这里的区别是没有把$y_{i-1}$加进去。</strong></li>
+</ul>
+<p>通过注意力分数最终得到的上下文向量$c_i$:</p>
+<script type="math/tex; mode=display">
+c_{i}=\sum_{j=1}^{T_x}\alpha_{ij}h_j\\
+\alpha_{ij}=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}\\
+e_{ij}=a(s_{i-1},h_j)</script><ul>
+<li>这里的$e_{ij}$论文中称之为对齐模型，具体的计算以及参数设置在论文的附录中：</li>
+</ul>
+<script type="math/tex; mode=display">
+a(s_{i-1},h_j)=v_a^Ttanh(W_as_{i-1}+U_ah_j)\\
+where\ W_a\in R^{n*n},U_a\in R^{n*2n},v_a\in R^n</script><p>​    注意这里用了两个参数矩阵，由于$s_{i-1}$来自decoder的隐层，decoder是单向的RNN，而$h_j$来自encoder的隐层是双向的RNN。还有的网络设计形式是将这两个向量在最后的维度concat，利用一个参数矩阵。<strong>代码实现上，encoder的隐层全拿出来，有seq_length的维度，而decoder的隐层$s_{i-1}$没有seq_length这个维度，只是一个时间步的隐层，因此要复制seq_length维度最终进行矩阵运算。（代码实现上都要用到矩阵运算，因此维度要计算清楚）</strong></p>
+<p>另外在这里并没有说明Q、K、V，即query、key和value。而在后面提到的Transformer中要经常提到这三个向量，其实原理都一样，只不过计算的方式不同，只要明确了QKV，就能理解attention的计算过程了。这里在做一个补充，对于上面attention的计算得到向量的过程通过这三个向量再描述一遍：</p>
+<blockquote>
+<p>Q：指decoder的隐层$s_{i-1}$；K和V：指encoder的隐层$h$。（K和V一般是一样的）</p>
+<p>Q和K通过函数（一般是全连接层）再经过softmax得到分数，分数再与V对应相乘（加权求和）得到针对当前Q的上下文语义向量。</p>
+</blockquote>
+<p><strong>分数也就是attention会通过神经网络自动训练、自动选择，只要给定loss，这也是端到端模型的一个优势。</strong></p>
 
     </div>
 
@@ -355,7 +404,7 @@ P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a hr
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder-decoder"><span class="nav-text">Encoder-decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Seq2seq"><span class="nav-text">Seq2seq</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder-decoder"><span class="nav-text">Encoder-decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Seq2seq"><span class="nav-text">Seq2seq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention"><span class="nav-text">Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%A7%88%EF%BC%9A%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%96%87%E5%AD%97%E6%8F%8F%E8%BF%B0"><span class="nav-text">概览：注意力机制文字描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E5%85%B7%E4%BD%93%E8%AF%B4%E6%98%8E"><span class="nav-text">公式具体说明</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -431,12 +480,12 @@ P(y_t|y_{t-1},y_{t-2},...,y_1,c)=g(h_t,y_{t-1},c)</script><h2 id="Seq2seq"><a hr
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">72k</span>
+    <span title="Symbols count total">73k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:05</span>
+    <span title="Reading time total">1:07</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
