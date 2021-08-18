@@ -182,7 +182,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-08-18 20:11:27 / Modified: 22:29:12" itemprop="dateCreated datePublished" datetime="2021-08-18T20:11:27+08:00">2021-08-18</time>
+              <time title="Created: 2021-08-18 20:11:27 / Modified: 22:30:51" itemprop="dateCreated datePublished" datetime="2021-08-18T20:11:27+08:00">2021-08-18</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,59 +220,14 @@
 
       
           <p>在了解了<a href="https://chuony.github.io/posts/44996/">Seq2seq中的Attention</a>后，相信大家对于Attention的原理和本质有了基本的印象。但我们仍然注意这种结构还是依托于RNN及其变体，并且只能串行计算。2017年，Transformer模型的提出大放异彩（<em>Vaswani,2017,Attention is All You Need</em>），这种模型架构避免循环并完全依赖于注意力机制来绘制输入和输出之间的全局依赖关系，并解决了 RNN 模型不能并行计算 的问题，训练的时间也显著减少。本篇博客基于<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">learn-nlp-with-transformers</a></p>
-<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 依然遵循 Encoder-Decoder 架构，下图中左边部分为编码器结构，右边为解码器结构。<strong>编码和解码都由多层构成（论文中是6层，层数并不固定），每层在各自的编码和解码部分结构上都是一样的，但不同层的权重参数是不同的。</strong></p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818203551.png" alt="image-20210818203544077"></p>
-<p><strong>编码器</strong>：</p>
-<ul>
-<li>编码器由N=6个完全相同的层堆叠而成。</li>
-<li>每一层都包括两个子层：1. Multi-head self-attention layer；2. Feed forward neural metwork.</li>
-<li>对每个子层采用残差连接和层标准化。</li>
-</ul>
-<p><strong>解码器</strong>：</p>
-<ul>
-<li>解码器由N=6个完全相同的层堆叠而成。</li>
-<li>每一层都包括三个子层：1. Multi-head self-attention layer；2. Feed forward neural metwork；3. Encoder-decoder的Multi-head attention.</li>
-<li>对每个子层采用残差连接和层标准化。</li>
-<li>解码器中的Multi-head self-attention layer是Masked，防止关注到后面的位置。</li>
-</ul>
-<h2 id="Self-attention"><a href="#Self-attention" class="headerlink" title="Self-attention"></a>Self-attention</h2><p>与seq2seq中的attention原理是一样的，我们<strong>对于每一个输入的token都要得到一个上下文语义向量，这个向量不仅由当前token位置词的信息，还融合了句子中其他位置的词的信息</strong>。类比于RNN：RNN 在处理一个词时，会考虑前面传过来的<em>hidden state</em>，而<em>hidden state</em>就包含了前面的词的信息。而Transformer使用<em>Self Attention</em>机制，会把其他单词的理解融入处理当前的单词。</p>
-<p><strong>具体计算步骤</strong>：</p>
-<ol>
-<li>对输入编码器的每个词向量，都创建 3 个向量，分别是：Query 向量，Key 向量，Value 向量。这 3 个向量是词向量分别和 3 个矩阵相乘得到的，而这个矩阵是我们要学习的参数。（<strong>这 3 个新得到的向量一般比原来的词向量的长度更小，假设这 3 个向量的长度是$d_{k}$</strong>）</li>
-<li>计算 Attention Score（注意力分数）。这些分数是当前token所对应的Query 向量和其他位置的每个token的 Key 向量的点积，最终得到总共有句子长度个分数：第一个分数就是 q1 和 k1 的内积，第二个分数就是 q1 和 k2 的点积。（<strong>这里利用点积，没有利用其他矩阵参数</strong>）</li>
-<li>把每个分数除以 $\sqrt{d_{k}}$ 。也可以除以其他数，除以一个数是为了在反向传播时，求取梯度更加稳定。</li>
-<li>把这些分数经过一个 Softmax 层，将分数归一化。（<strong>这些分数决定了在编码当前位置的词时，对所有位置的词分别有多少的注意力</strong>）</li>
-<li>得到每个位置的分数后，将每个分数分别与每个 Value 向量相乘。这种做法背后的直觉理解就是：对于分数高的位置，相乘后的值就越大，我们把更多的注意力放到了它们身上；相反则这些位置的词可能是相关性不大的，这样我们就忽略了这些位置的词。</li>
-<li>把上一步得到的向量相加，就得到了 Self Attention 层在这个位置的输出。</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222150.png" alt="2-sum"></p>
-<p><strong>最终得到的当前位置的向量会输入到前馈神经网络，而前馈神经网络的输出会作为下一层的输入。</strong></p>
-<p>上面的计算步骤每次只能计算一个位置的输出向量，在实际的代码实现中，Self Attention 的计算过程是使用矩阵来实现的，这样可以加速计算，一次就得到所有位置的输出向量。</p>
-<p><strong>矩阵计算步骤：</strong></p>
-<ol>
-<li>把所有词向量放到一个矩阵 X 中，然后分别和3 个权重矩阵$W^Q, W^K, W^V$ 相乘，得到 Q，K，V 矩阵。</li>
-<li>使用矩阵可以把上面的第 2 步到第 6 步压缩为一步，直接得到 Self Attention 的输出。</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222536.png" alt="image-20210818222536262"></p>
-<h2 id="Multi-head-attention"><a href="#Multi-head-attention" class="headerlink" title="Multi-head attention"></a>Multi-head attention</h2><p>多头注意力机制（multi-head attention）进一步完善了 Self Attention 层，类似于CNN中的卷积核对于特征的多方面提取，每一部分只关注一个特征。</p>
-<p>多头注意力机制赋予 attention 层多个“子表示空间”，它扩展了模型关注不同位置的能力。论文中采用了8组注意力（也就是8组QKV的权重矩阵）。每一组注意力的权重矩阵都是随机初始化的。</p>
-<p>具体计算步骤：</p>
-<ol>
-<li>每组注意力具有单独的 $W^Q, W^K, W^V$ 权重矩阵。将输入 X 和每组注意力的$W^Q, W^K, W^V$  相乘，得到 8 组 Q, K, V 矩阵。</li>
-<li>通过self-attention的计算得到每组的Z矩阵，最终得到8个Z矩阵。</li>
-<li>把这8个Z矩阵拼接起来，然后和另一个权重矩阵$W^O$相乘，得到最终的矩阵Z，这个矩阵包含了所有 attention heads（注意力头） 的信息。这个矩阵会输入到 FFNN。<strong>因为FFNN接收的是 1 个矩阵（其中每行的向量表示一个词），而不是 8 个矩阵。</strong></li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210818222702.webp" alt="2-put-together"></p>
-<h2 id="Positional-encoding"><a href="#Positional-encoding" class="headerlink" title="Positional encoding"></a>Positional encoding</h2><p>我们都知道语言是有顺序的，而这种并行计算没有表示序列中单词的顺序。为了解决这个问题，Transformer 模型对每个输入的向量都添加了一个向量。这些向量遵循模型学习到的特定模式，有助于确定每个单词的位置，或者句子中不同单词之间的距离。<strong>这种做法背后的直觉是：将这些表示位置的向量添加到词向量中，得到了新的向量，这些新向量映射到 Q/K/V，然后计算点积得到 attention 时，可以提供有意义的信息。</strong></p>
-<h2 id="Layer-normalization"><a href="#Layer-normalization" class="headerlink" title="Layer normalization"></a>Layer normalization</h2><p>与层标准化（LN）相对应的是batch normalization。BN顾名思义就是对一个batch进行操作，例如每一行数据有三个特征，BN是针对每一列（特征）进行缩放。而LN正好相反，它针对的是每一行进行缩放。</p>
-<p>然而我们会看出LN好像没什么道理？<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/74516930">https://zhuanlan.zhihu.com/p/74516930</a></p>
-<h2 id="Mask"><a href="#Mask" class="headerlink" title="Mask"></a>Mask</h2><ul>
-<li>Sequence Mask：为了防止decoder时看到未来信息；只允许关注到输出序列中早于当前位置之前的单词。具体做法是：在 Self-Attention 分数经过 Softmax 层之前，屏蔽当前位置之后的那些位置。</li>
-<li>Padding Mask： pad为0的值。</li>
-</ul>
-<h2 id="Encoder-decoder-attention"><a href="#Encoder-decoder-attention" class="headerlink" title="Encoder-decoder attention"></a>Encoder-decoder attention</h2><p>第一个编码器的输入是一个序列，最后一个编码器输出是一组注意力向量 K 和 V。这些注意力向量将会输入到每个解码器的Encoder-Decoder Attention层，这有助于解码器把注意力集中在输入序列的合适位置。</p>
-<p>Encoder-decoder attention使得关注输入序列的信息：Q来自于decoder；K和V来自于encoder。即decoder前一层的输出来构造 Query 矩阵，而 Key 矩阵和 Value 矩阵来自于编码器最终的输出。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/posts/63851/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
