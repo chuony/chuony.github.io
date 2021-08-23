@@ -20,28 +20,23 @@
     var CONFIG = {"hostname":"chuony.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="NLP基础掌握NLP基础知识以及常用模型，例如CNN、RNN等。养成查官方文档的好习惯。">
+  <meta name="description" content="之前我们所了解的Word2vec属于静态词向量，它的主要局限性是上下文无关，即不能解决一词多义问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用Transformer架构，这也">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NLP基础">
-<meta property="og:url" content="http://chuony.github.io/posts/62790/index.html">
+<meta property="og:title" content="Bert:预训练模型">
+<meta property="og:url" content="http://chuony.github.io/posts/53416/index.html">
 <meta property="og:site_name" content="Chuony&#39; Blog">
-<meta property="og:description" content="NLP基础掌握NLP基础知识以及常用模型，例如CNN、RNN等。养成查官方文档的好习惯。">
+<meta property="og:description" content="之前我们所了解的Word2vec属于静态词向量，它的主要局限性是上下文无关，即不能解决一词多义问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用Transformer架构，这也">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801152557.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801152611.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801153041.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801153207.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801153235.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801155714.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801155811.png">
-<meta property="article:published_time" content="2021-08-01T07:21:29.000Z">
-<meta property="article:modified_time" content="2021-08-16T07:34:42.560Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823221613.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823222548.webp">
+<meta property="article:published_time" content="2021-08-20T13:49:21.000Z">
+<meta property="article:modified_time" content="2021-08-23T14:26:08.443Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801152557.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823221613.png">
 
-<link rel="canonical" href="http://chuony.github.io/posts/62790/">
+<link rel="canonical" href="http://chuony.github.io/posts/53416/">
 
 
 <script id="page-configurations">
@@ -54,7 +49,7 @@
   };
 </script>
 
-  <title>NLP基础 | Chuony' Blog</title>
+  <title>Bert:预训练模型 | Chuony' Blog</title>
   
 
 
@@ -171,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/62790/">
+    <link itemprop="mainEntityOfPage" href="http://chuony.github.io/posts/53416/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/xi.jpg">
@@ -184,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NLP基础
+          Bert:预训练模型
         </h1>
 
         <div class="post-meta">
@@ -194,14 +189,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-08-01 15:21:29" itemprop="dateCreated datePublished" datetime="2021-08-01T15:21:29+08:00">2021-08-01</time>
+              <time title="Created: 2021-08-20 21:49:21" itemprop="dateCreated datePublished" datetime="2021-08-20T21:49:21+08:00">2021-08-20</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-16 15:34:42" itemprop="dateModified" datetime="2021-08-16T15:34:42+08:00">2021-08-16</time>
+                <time title="Modified: 2021-08-23 22:26:08" itemprop="dateModified" datetime="2021-08-23T22:26:08+08:00">2021-08-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,7 +204,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">NLP入门</span></a>
+                  <a href="/categories/NLP%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">NLP进阶</span></a>
                 </span>
             </span>
 
@@ -226,7 +221,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>328</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -245,31 +240,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="NLP基础"><a href="#NLP基础" class="headerlink" title="NLP基础"></a>NLP基础</h3><p>掌握NLP基础知识以及常用模型，例如CNN、RNN等。养成查官方文档的好习惯。</p>
+        <p>之前我们所了解的<a href="https://chuony.github.io/posts/23534/">Word2vec</a>属于静态词向量，它的主要局限性是上下文无关，即不能解决<strong>一词多义</strong>问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用Transformer架构，这也是Bert爆火的原因。</p>
 <span id="more"></span>
-<h3 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h3><p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801152557.png" alt="image-20210801152550612"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801152611.png" alt="image-20210801152611503"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801153041.png" alt="image-20210801153041692"></p>
-<ul>
-<li>RNN的时间步不确定，即句子的长度。每个时间步的参数是共享的。  </li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/41949741">https://www.zhihu.com/question/41949741</a></li>
-</ul>
-<h3 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h3><ul>
-<li>卷积层</li>
-<li>激活函数</li>
-<li>池化层</li>
-<li>全连接层</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801153207.png" alt="image-20210801153207496"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801153235.png" alt="image-20210801153235842"></p>
-<ul>
-<li>卷积层的深度就是卷积核的个数；卷积核的深度与输入数据的深度相同。</li>
-<li>即一个7x7x3的图片，卷积核大小3x3x3，每个通道进行相乘后要相加再加一个bias。最后得到3x3x2（2表示有两个卷积核）</li>
-<li>卷积核就是要学习的参数。可以看作一个神经元的输出，只观察数据中的一小部分，并且和空间上左右两边的所有神经元共享参数。（因为这些数字都是使用同一个滤波器得到的结果）</li>
-<li>池化操作不会改变原来卷积层的深度。 </li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801155714.png" alt="image-20210801155714303"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210801155811.png" alt="image-20210801155811547"></p>
+<p>本片博客所涉及的论文：</p>
+<blockquote>
+<p>ELMo：Peters,2018,Deep contextualized word representations<br>GPT：Radford,2018,Improving Language Understanding by Generative Pre-Training<br>Bert：Devlin,2018,Bert: Pre-training of deep bidirectional transformers for language understanding</p>
+</blockquote>
+<h2 id="ELMo"><a href="#ELMo" class="headerlink" title="ELMo"></a>ELMo</h2><p>ELMo用<strong>两层的Bi-LSTM</strong>从<strong>双向语言模型任务BiLM</strong>（包括1个前向的语言模型以及1个后向的语言模型）中预训练一个<strong>Bi-LSTM Encoder</strong>。在做下游任务时，从预训练网络中提取对应单词的<strong>网络各层词嵌入作为新特征</strong>补充到下游任务中。</p>
+<p>ELMO给下游提供的是每个单词的特征形式，所以这类预训练方法也称为“<strong>Feature-based</strong>”。与其相对应的是“<strong>Fine-tuning</strong>”。<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1606.09282.pdf">图片来源</a></p>
+<blockquote>
+<p><strong>Feature-based</strong>：Feature-based产生的上下文词嵌入表示，在下游任务训练过程中是<strong>固定不变</strong>的。相当于只是把得到的上下文词嵌入表示喂给下游任务的模型，作为<strong>补充的特征</strong>，只学习下游任务特定的模型参数。<strong>Fine-tuning</strong>：Fine-tuning把预训练模型中的<strong>encoder</strong>模型结构都提供给下游任务，这样下游任务可以对<strong>encoder</strong>的参数进行fine-tune。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823221613.png" alt="image-20210823221606662"></p>
+<p>ELMO最终得到<strong>三个embedding</strong>：最底层的单词的embedding; 第一层的bilstm中对应单词位置的embedding，这层编码单词的句法信息更多一些；第二层的bilstm对应单词位置的embedding，这层编码单词的语义信息更多一些。之后给予这三个向量权重（<strong>在下游任务需要训练的</strong>），根据各自权重累加求和，将三个向量整合在一起。将这整合的向量最为下游任务的对应单词的输入，以此作为补充的新特征。<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">图片来源</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823222548.webp" alt="3-elmo-pre2"></p>
+<p><strong>问题</strong>：<strong>ELMo 采取双向拼接这种融合特征的能力可能比 Bert 一体化的融合特征方式弱</strong></p>
+<blockquote>
+<p>ELMo虽然使用了前向和后向的语言模型，但还是单独的分别预测。利用前向LM时，当前词只能看到前面单词的信息；利用后向LM时，当前词只能看到后面单词的信息。最终二者concat，但还是没有从根本上解决提供的上下文。这也是bert所改进的地方。</p>
+</blockquote>
 
     </div>
 
@@ -285,7 +273,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接: </strong>
-    <a href="http://chuony.github.io/posts/62790/" title="NLP基础">http://chuony.github.io/posts/62790/</a>
+    <a href="http://chuony.github.io/posts/53416/" title="Bert:预训练模型">http://chuony.github.io/posts/53416/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -305,13 +293,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/posts/35441/" rel="prev" title="【机器学习基础】机器学习实战01">
-      <i class="fa fa-chevron-left"></i> 【机器学习基础】机器学习实战01
+    <a href="/posts/63851/" rel="prev" title="【Transformer】Attention is All You Need">
+      <i class="fa fa-chevron-left"></i> 【Transformer】Attention is All You Need
     </a></div>
-      <div class="post-nav-item">
-    <a href="/posts/23534/" rel="next" title="【Word2vec】词向量入门2">
-      【Word2vec】词向量入门2 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -370,7 +355,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#NLP%E5%9F%BA%E7%A1%80"><span class="nav-text">NLP基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN"><span class="nav-text">RNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN"><span class="nav-text">CNN</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ELMo"><span class="nav-text">ELMo</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -530,6 +515,59 @@
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
