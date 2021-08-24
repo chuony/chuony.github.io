@@ -22,15 +22,19 @@
 
   <meta name="description" content="之前我们所了解的Word2vec属于静态词向量，它的主要局限性是上下文无关，即不能解决一词多义问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用Transformer架构，这也">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bert:预训练模型">
+<meta property="og:title" content="从ELMo、GPT到Bert">
 <meta property="og:url" content="http://chuony.github.io/posts/53416/index.html">
 <meta property="og:site_name" content="Chuony&#39; Blog">
 <meta property="og:description" content="之前我们所了解的Word2vec属于静态词向量，它的主要局限性是上下文无关，即不能解决一词多义问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用Transformer架构，这也">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823221613.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823222548.webp">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233030.webp">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233401.webp">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233632.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824234005.png">
 <meta property="article:published_time" content="2021-08-20T13:49:21.000Z">
-<meta property="article:modified_time" content="2021-08-23T14:26:08.443Z">
+<meta property="article:modified_time" content="2021-08-24T15:56:15.275Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -49,7 +53,7 @@
   };
 </script>
 
-  <title>Bert:预训练模型 | Chuony' Blog</title>
+  <title>从ELMo、GPT到Bert | Chuony' Blog</title>
   
 
 
@@ -179,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Bert:预训练模型
+          从ELMo、GPT到Bert
         </h1>
 
         <div class="post-meta">
@@ -196,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 22:26:08" itemprop="dateModified" datetime="2021-08-23T22:26:08+08:00">2021-08-23</time>
+                <time title="Modified: 2021-08-24 23:56:15" itemprop="dateModified" datetime="2021-08-24T23:56:15+08:00">2021-08-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,14 +225,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.2k</span>
+              <span>3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>3 mins.</span>
             </span>
 
         </div>
@@ -240,24 +244,58 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>之前我们所了解的<a href="https://chuony.github.io/posts/23534/">Word2vec</a>属于静态词向量，它的主要局限性是上下文无关，即不能解决<strong>一词多义</strong>问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用Transformer架构，这也是Bert爆火的原因。</p>
+        <p>之前我们所了解的<a href="https://chuony.github.io/posts/23534/">Word2vec</a>属于静态词向量，它的主要局限性是上下文无关，即不能解决<strong>一词多义</strong>问题。静态词向量也叫做上下文无关向量，除了Word2vec，还有我们所熟知的Glove、CoVe向量等。而ELMo的出现解决了一词多义问题，它可以动态的去调整单词的词向量，从而表达不同语义下的单词。但该模型采用的网络架构是LSTM，抽取特征能力远远不够，而后期的Bert采用<a href="https://chuony.github.io/posts/63851/">Transformer</a>架构，这也是Bert爆火的原因。</p>
 <span id="more"></span>
-<p>本片博客所涉及的论文：</p>
+<p>本篇博客所涉及的论文：</p>
 <blockquote>
 <p>ELMo：Peters,2018,Deep contextualized word representations<br>GPT：Radford,2018,Improving Language Understanding by Generative Pre-Training<br>Bert：Devlin,2018,Bert: Pre-training of deep bidirectional transformers for language understanding</p>
 </blockquote>
-<h2 id="ELMo"><a href="#ELMo" class="headerlink" title="ELMo"></a>ELMo</h2><p>ELMo用<strong>两层的Bi-LSTM</strong>从<strong>双向语言模型任务BiLM</strong>（包括1个前向的语言模型以及1个后向的语言模型）中预训练一个<strong>Bi-LSTM Encoder</strong>。在做下游任务时，从预训练网络中提取对应单词的<strong>网络各层词嵌入作为新特征</strong>补充到下游任务中。</p>
-<p>ELMO给下游提供的是每个单词的特征形式，所以这类预训练方法也称为“<strong>Feature-based</strong>”。与其相对应的是“<strong>Fine-tuning</strong>”。<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1606.09282.pdf">图片来源</a></p>
+<h2 id="ELMo"><a href="#ELMo" class="headerlink" title="ELMo"></a>ELMo</h2><p>ELMo用<strong>两层的Bi-LSTM</strong>从<strong>双向语言模型任务BiLM</strong>（包括1个前向的语言模型以及1个后向的语言模型）中预训练一个<strong>Bi-LSTM Encoder</strong>。在做下游任务时，从预训练网络中提取对应单词的<strong>网络各层词嵌入作为新特征</strong>补充到下游任务中。<a target="_blank" rel="noopener" href="http://xtf615.com/2020/11/28/Pretrain-Models/">NLP预训练模型</a></p>
+<p>ELMo给下游提供的是每个单词的特征形式，所以这类预训练方法也称为“<strong>Feature-based</strong>”。与其相对应的是“<strong>Fine-tuning</strong>”。<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1606.09282.pdf">图片来源</a></p>
 <blockquote>
 <p><strong>Feature-based</strong>：Feature-based产生的上下文词嵌入表示，在下游任务训练过程中是<strong>固定不变</strong>的。相当于只是把得到的上下文词嵌入表示喂给下游任务的模型，作为<strong>补充的特征</strong>，只学习下游任务特定的模型参数。<strong>Fine-tuning</strong>：Fine-tuning把预训练模型中的<strong>encoder</strong>模型结构都提供给下游任务，这样下游任务可以对<strong>encoder</strong>的参数进行fine-tune。</p>
 </blockquote>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823221613.png" alt="image-20210823221606662"></p>
-<p>ELMO最终得到<strong>三个embedding</strong>：最底层的单词的embedding; 第一层的bilstm中对应单词位置的embedding，这层编码单词的句法信息更多一些；第二层的bilstm对应单词位置的embedding，这层编码单词的语义信息更多一些。之后给予这三个向量权重（<strong>在下游任务需要训练的</strong>），根据各自权重累加求和，将三个向量整合在一起。将这整合的向量最为下游任务的对应单词的输入，以此作为补充的新特征。<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">图片来源</a></p>
+<p>ELMo最终得到<strong>三个embedding</strong>：最底层的单词的embedding; 第一层的bilstm中对应单词位置的embedding，这层编码单词的句法信息更多一些；第二层的bilstm对应单词位置的embedding，这层编码单词的语义信息更多一些。之后给予这三个向量权重（<strong>在下游任务需要训练的</strong>），根据各自权重累加求和，将三个向量整合在一起。将这整合的向量最为下游任务的对应单词的输入，以此作为补充的新特征。<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">图片来源</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823222548.webp" alt="3-elmo-pre2"></p>
 <p><strong>问题</strong>：<strong>ELMo 采取双向拼接这种融合特征的能力可能比 Bert 一体化的融合特征方式弱</strong></p>
 <blockquote>
 <p>ELMo虽然使用了前向和后向的语言模型，但还是单独的分别预测。利用前向LM时，当前词只能看到前面单词的信息；利用后向LM时，当前词只能看到后面单词的信息。最终二者concat，但还是没有从根本上解决提供的上下文。这也是bert所改进的地方。</p>
 </blockquote>
+<h2 id="GPT"><a href="#GPT" class="headerlink" title="GPT"></a>GPT</h2><p>GPT 使用 Transformer 的 <strong>Decoder</strong> 结构，但做了改动，只保留masked multi-head attention。即使用<strong>单向的Transformer</strong>预训练<strong>单向语言模型</strong>。</p>
+<p>对于不同的下游任务，要将任务的网络结构改造成和GPT的网络结构相同。之后用该任务训练整个网络，对网络参数进行fine-tuning。而后期GPT2模型的出现也只是在原来基础上加大了模型结构和训练语料的规模，在基本结构和训练模式上并没有什么本质的区别。</p>
+<p>GPT和传统的语言模型一样，一次输出一个 token（Bert不是）：<strong>自回归语言模型</strong>。这种自回归的思想使得RNN非常有效。</p>
+<blockquote>
+<p>GPT和后来的一些模型如 TransformerXL 和 XLNet，本质上都是自回归的模型。但 BERT 不是自回归模型。这是一种权衡。去掉了自回归后，BERT 能够整合左右两边的上下文，从而获得更好的结果。XLNet 重新使用了 自回归，同时也找到一种方法能够结合两边的上下文。(XLNet：PLM 排列语言模型)</p>
+</blockquote>
+<p><strong>评价模型：</strong></p>
+<blockquote>
+<p>GPT在训练的时候可以像masked self attention的基础操作一样，将下文的信息mask直接通过矩阵操作。但评价模型的时候，模型在每次迭代后只添加一个新词，那么对于已经处理过的 token 来说，沿着之前的路径重新计算 Self Attention 是低效的。在这种情况下，我们处理第一个 token时会保存该token的 Key 向量和 Value 向量，每个 Self Attention 层都持有这个 token 对应的 Key 向量和 Value 向量，在下个时间步，下一个token不需要生成上一个token的 Query、Value 以及 Key 向量。它只需要重新使用第一次迭代中保存的对应向量。</p>
+</blockquote>
+<p><strong>问题</strong>：masked self attention训练和测试时不一样的，要注意计算过程。Transformer更多细节？</p>
+<p>更多计算过程可以查看：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers/blob/main/docs/%E7%AF%87%E7%AB%A02-Transformer%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86/2.4-%E5%9B%BE%E8%A7%A3GPT.md">图解GPT</a></p>
+<h2 id="Bert"><a href="#Bert" class="headerlink" title="Bert"></a>Bert</h2><p>Bert 使用 Transformer 的 <strong>Encoder</strong> 结构，引入了新的预训练任务，带mask的语言模型任务<strong>MLM</strong>和下句预测任务<strong>NSP</strong>。由于MLM预训练任务的存在，使得Transformer能够进行<strong>双向</strong>self-attention。</p>
+<p>第一个输入的 token 是特殊的 <strong>[CLS]</strong>，它 的含义是分类（class的缩写）。就像 Transformer 中普通的 Encoder 一样，BERT 将一串单词作为输入，这些单词在 Encoder 的栈中不断向上流动。每一层都会经过 Self Attention 层，并通过一个前馈神经网络，然后将结果传给下一个 Encoder。最终每个位置输出一个大小为 hidden_size 的向量，对于分类任务，我们将第一个位置也就是[CLS]位置的输出向量，作为后面分类器的输入。论文里用单层神经网络作为分类器，取得了很好的效果。</p>
+<p><strong>Masked Language Model（MLM）</strong>:</p>
+<blockquote>
+<p>随机的mask一个句子中15%的词，用其上下文做预测。<br>为了保证预训练和微调时的一致性，采取以下措施：<br>1.80%采用mask;<br>2.10%随机一个词替代mask;<br>3.10%保持不变。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233030.webp" alt="3-bert-mask"></p>
+<p><strong>Next Sentence Prediction（NSP）</strong>:</p>
+<p>给出两个句子（A 和 B），判断 B 是否是 A 后面的相邻句子。其中50%的数据B是A的下一个句子。（也是在[CLS]的位置）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233401.webp" alt="3-bert-2sent"></p>
+<p><strong>Bert在不同任务上的应用</strong>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233632.png" alt="image-20210824233632856"></p>
+<p>使用 BERT 并不是只有微调这一种方法。就像 ELMo 一样也可以使用预训练的 BERT 来创建语境化的词嵌入。论文里也提到，这种方法在命名实体识别任务中的效果，接近于微调 BERT 模型的效果。那么哪种向量最适合作为上下文词嵌入？这与任务有关，论文中也论证了6种向量选择的结果对比。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>ELMo：Bilstm+LM；Feature-based；动态的词向量表征；但双向只是单纯的concat两个lstm，并没有真正的双向。</p>
+</li>
+<li><p>GPT：Transformer的decoder部分，含有sequence mask，去掉了中间的encoder-decoder的attention；Fine-tuning；在文本生成任务中表现出色，同时采用辅助目标函数和lm；但单向的transformer结构无法利用全局上下文信息。</p>
+</li>
+<li><p>Bert：Transformer的encoder部分，无sequence mask；Fine-tuning；在各项下游任务中表现最好，采用MLM的实现形式完成真正意义上的双向，还增加了句子级别预测的任务；但在文本生成任务中表现不好。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824234005.png" alt="image-20210824234005746"></p>
 
     </div>
 
@@ -273,7 +311,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接: </strong>
-    <a href="http://chuony.github.io/posts/53416/" title="Bert:预训练模型">http://chuony.github.io/posts/53416/</a>
+    <a href="http://chuony.github.io/posts/53416/" title="从ELMo、GPT到Bert">http://chuony.github.io/posts/53416/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明:  </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -355,7 +393,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ELMo"><span class="nav-text">ELMo</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ELMo"><span class="nav-text">ELMo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPT"><span class="nav-text">GPT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bert"><span class="nav-text">Bert</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -431,12 +469,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">79k</span>
+    <span title="Symbols count total">81k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:12</span>
+    <span title="Reading time total">1:14</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
