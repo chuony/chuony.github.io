@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233632.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824234005.png">
 <meta property="article:published_time" content="2021-08-20T13:49:21.000Z">
-<meta property="article:modified_time" content="2021-08-24T15:56:15.275Z">
+<meta property="article:modified_time" content="2021-08-24T16:00:49.682Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -200,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-24 23:56:15" itemprop="dateModified" datetime="2021-08-24T23:56:15+08:00">2021-08-24</time>
+                <time title="Modified: 2021-08-25 00:00:49" itemprop="dateModified" datetime="2021-08-25T00:00:49+08:00">2021-08-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
 <span id="more"></span>
 <p>本篇博客所涉及的论文：</p>
 <blockquote>
-<p>ELMo：Peters,2018,Deep contextualized word representations<br>GPT：Radford,2018,Improving Language Understanding by Generative Pre-Training<br>Bert：Devlin,2018,Bert: Pre-training of deep bidirectional transformers for language understanding</p>
+<p>ELMo：Peters,2018,Deep contextualized word representations<br>GPT：Radford,2018,Improving Language Understanding by Generative Pre-Training<br>Bert：Devlin,2018,Bert:Pre-training of deep bidirectional transformers for language understanding</p>
 </blockquote>
 <h2 id="ELMo"><a href="#ELMo" class="headerlink" title="ELMo"></a>ELMo</h2><p>ELMo用<strong>两层的Bi-LSTM</strong>从<strong>双向语言模型任务BiLM</strong>（包括1个前向的语言模型以及1个后向的语言模型）中预训练一个<strong>Bi-LSTM Encoder</strong>。在做下游任务时，从预训练网络中提取对应单词的<strong>网络各层词嵌入作为新特征</strong>补充到下游任务中。<a target="_blank" rel="noopener" href="http://xtf615.com/2020/11/28/Pretrain-Models/">NLP预训练模型</a></p>
 <p>ELMo给下游提供的是每个单词的特征形式，所以这类预训练方法也称为“<strong>Feature-based</strong>”。与其相对应的是“<strong>Fine-tuning</strong>”。<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1606.09282.pdf">图片来源</a></p>
@@ -256,7 +256,7 @@
 <p><strong>Feature-based</strong>：Feature-based产生的上下文词嵌入表示，在下游任务训练过程中是<strong>固定不变</strong>的。相当于只是把得到的上下文词嵌入表示喂给下游任务的模型，作为<strong>补充的特征</strong>，只学习下游任务特定的模型参数。<strong>Fine-tuning</strong>：Fine-tuning把预训练模型中的<strong>encoder</strong>模型结构都提供给下游任务，这样下游任务可以对<strong>encoder</strong>的参数进行fine-tune。</p>
 </blockquote>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823221613.png" alt="image-20210823221606662"></p>
-<p>ELMo最终得到<strong>三个embedding</strong>：最底层的单词的embedding; 第一层的bilstm中对应单词位置的embedding，这层编码单词的句法信息更多一些；第二层的bilstm对应单词位置的embedding，这层编码单词的语义信息更多一些。之后给予这三个向量权重（<strong>在下游任务需要训练的</strong>），根据各自权重累加求和，将三个向量整合在一起。将这整合的向量最为下游任务的对应单词的输入，以此作为补充的新特征。<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers">图片来源</a></p>
+<p>ELMo最终得到<strong>三个embedding</strong>：最底层的单词的embedding; 第一层的bilstm中对应单词位置的embedding，这层编码单词的句法信息更多一些；第二层的bilstm对应单词位置的embedding，这层编码单词的语义信息更多一些。之后给予这三个向量权重（<strong>在下游任务需要训练的</strong>），根据各自权重累加求和，将三个向量整合在一起。将这整合的向量最为下游任务的对应单词的输入，以此作为补充的新特征。<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/63115885">ELMo详解</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210823222548.webp" alt="3-elmo-pre2"></p>
 <p><strong>问题</strong>：<strong>ELMo 采取双向拼接这种融合特征的能力可能比 Bert 一体化的融合特征方式弱</strong></p>
 <blockquote>
@@ -272,13 +272,18 @@
 <blockquote>
 <p>GPT在训练的时候可以像masked self attention的基础操作一样，将下文的信息mask直接通过矩阵操作。但评价模型的时候，模型在每次迭代后只添加一个新词，那么对于已经处理过的 token 来说，沿着之前的路径重新计算 Self Attention 是低效的。在这种情况下，我们处理第一个 token时会保存该token的 Key 向量和 Value 向量，每个 Self Attention 层都持有这个 token 对应的 Key 向量和 Value 向量，在下个时间步，下一个token不需要生成上一个token的 Query、Value 以及 Key 向量。它只需要重新使用第一次迭代中保存的对应向量。</p>
 </blockquote>
-<p><strong>问题</strong>：masked self attention训练和测试时不一样的，要注意计算过程。Transformer更多细节？</p>
+<p><strong>问题</strong>：Masked self attention训练和测试时不一样的，要注意计算过程。Transformer更多细节？</p>
 <p>更多计算过程可以查看：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/learn-nlp-with-transformers/blob/main/docs/%E7%AF%87%E7%AB%A02-Transformer%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86/2.4-%E5%9B%BE%E8%A7%A3GPT.md">图解GPT</a></p>
 <h2 id="Bert"><a href="#Bert" class="headerlink" title="Bert"></a>Bert</h2><p>Bert 使用 Transformer 的 <strong>Encoder</strong> 结构，引入了新的预训练任务，带mask的语言模型任务<strong>MLM</strong>和下句预测任务<strong>NSP</strong>。由于MLM预训练任务的存在，使得Transformer能够进行<strong>双向</strong>self-attention。</p>
 <p>第一个输入的 token 是特殊的 <strong>[CLS]</strong>，它 的含义是分类（class的缩写）。就像 Transformer 中普通的 Encoder 一样，BERT 将一串单词作为输入，这些单词在 Encoder 的栈中不断向上流动。每一层都会经过 Self Attention 层，并通过一个前馈神经网络，然后将结果传给下一个 Encoder。最终每个位置输出一个大小为 hidden_size 的向量，对于分类任务，我们将第一个位置也就是[CLS]位置的输出向量，作为后面分类器的输入。论文里用单层神经网络作为分类器，取得了很好的效果。</p>
 <p><strong>Masked Language Model（MLM）</strong>:</p>
 <blockquote>
-<p>随机的mask一个句子中15%的词，用其上下文做预测。<br>为了保证预训练和微调时的一致性，采取以下措施：<br>1.80%采用mask;<br>2.10%随机一个词替代mask;<br>3.10%保持不变。</p>
+<p>随机的mask一个句子中15%的词，用其上下文做预测。<br>为了保证预训练和微调时的一致性，采取以下措施：</p>
+<ol>
+<li>80%采用mask;</li>
+<li>10%随机一个词替代mask;</li>
+<li>10%保持不变。</li>
+</ol>
 </blockquote>
 <p><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20210824233030.webp" alt="3-bert-mask"></p>
 <p><strong>Next Sentence Prediction（NSP）</strong>:</p>
