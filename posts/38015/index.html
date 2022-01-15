@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20211230142904.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20211230143008.png">
 <meta property="article:published_time" content="2021-12-30T05:05:23.000Z">
-<meta property="article:modified_time" content="2021-12-30T06:30:55.095Z">
+<meta property="article:modified_time" content="2022-01-10T12:06:27.367Z">
 <meta property="article:author" content="Chuony">
 <meta property="article:tag" content="CSAPP">
 <meta name="twitter:card" content="summary">
@@ -189,10 +189,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-12-30 13:05:23 / Modified: 14:30:55" itemprop="dateCreated datePublished" datetime="2021-12-30T13:05:23+08:00">2021-12-30</time>
+              <time title="Created: 2021-12-30 13:05:23" itemprop="dateCreated datePublished" datetime="2021-12-30T13:05:23+08:00">2021-12-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-10 20:06:27" itemprop="dateModified" datetime="2022-01-10T20:06:27+08:00">2022-01-10</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -216,7 +222,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.4k</span>
+              <span>1.5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -253,6 +259,8 @@
 <p><strong>指令相关</strong>：大多数指令包含两部分：操作码和操作数。例如图中的这几条指令 movq、addq、subq 这部分被定义为操作码，它决定了 CPU 执行操作的类型；操作码之后的这部分是操作数，大多数指令具有一个或者多个操作数。不过像 ret 返回指令，是没有操作数的。<br><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20211230141526.png" alt="image-20211230141519125"></p>
 <h2 id="数据传送指令"><a href="#数据传送指令" class="headerlink" title="数据传送指令"></a>数据传送指令</h2><p>实际上，在一些程序的执行过程中，需要在 CPU 和内存之间进行频繁的数据存取。例如 CPU 执行 c=a +b。那么首先通过 CPU 执行数据传送指令将 a 和 b 的值从内存读到寄存器内，寄存器就是 CPU 内的一种数据存储部件，只不过容量较小。<br><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20211230142904.png" alt="image-20211230142904196"></p>
 <p>以 x86-64 处理器为例，寄存器 rax 的大小是 64 个比特位 (8 个字节)，如果变量 a 是 long 类型，需要占用 8 个字节，因此，寄存器 rax 全部的数据位都用来保存变量 a；如果变量 a 是 int 类型，那么只需要用 4 个字节来存储该变量，那么只需要用到寄存器的低 32 位就够了；如果变量 a 是 short 类型，则只需要用到寄存器的低 16 位；<br><img src="https://cdn.jsdelivr.net/gh/chuony/pic/picdata/20211230143008.png" alt="image-20211230143008288"></p>
+<h2 id="循环与跳转"><a href="#循环与跳转" class="headerlink" title="循环与跳转"></a>循环与跳转</h2><p>ALU 除了执行算术和逻辑运算指令外，还会根据该运算的结果去设置条件码寄存器。</p>
+<p>C 语言中提供了三种循环结构，即 do-while、while 以及 for 语句，汇编语言中没有定义专门的指令来实现循环结构，循环语句是通过条件测试导跳转的结合来实现的。</p>
 
     </div>
 
@@ -291,7 +299,10 @@
     <a href="/posts/28967/" rel="prev" title="【CSAPP】深入理解计算机系统02：信息的表示和处理">
       <i class="fa fa-chevron-left"></i> 【CSAPP】深入理解计算机系统02：信息的表示和处理
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/posts/13288/" rel="next" title="【CSAPP】深入理解计算机系统04：处理器体系架构">
+      【CSAPP】深入理解计算机系统04：处理器体系架构 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -350,7 +361,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A0%81"><span class="nav-text">程序编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%81%E6%8C%87%E4%BB%A4"><span class="nav-text">数据传送指令</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A0%81"><span class="nav-text">程序编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%81%E6%8C%87%E4%BB%A4"><span class="nav-text">数据传送指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E4%B8%8E%E8%B7%B3%E8%BD%AC"><span class="nav-text">循环与跳转</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -366,7 +377,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -417,7 +428,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -426,12 +437,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">91k</span>
+    <span title="Symbols count total">93k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:22</span>
+    <span title="Reading time total">1:24</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
